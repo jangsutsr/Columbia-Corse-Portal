@@ -21,35 +21,48 @@
 					<br>
 					<small>Everything you need for your courses</small>
 				</h1>
-				<form role="form">
-					<div class="form-group row">
-						<label class="control-label col-sm-1" for="uni">
-							<span class="glyphicon glyphicon-user"></span>
-						</label>
-						<div class="col-sm-11">
-							<input class="form-control" id="uni" type="text" placeholder="Enter UNI">
-						</div>
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#user" data-toggle="tab">User</a></li>
+					<li><a href="#professor" data-toggle="tab">Professor</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="user">
+						<br>
+						<form role="form">
+							<div class="form-group row">
+								<label class="control-label col-sm-1" for="uni">
+									<span class="glyphicon glyphicon-user big-icon"></span>
+								</label>
+								<div class="col-sm-11">
+									<input class="form-control" id="uni" type="text" placeholder="Enter UNI">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="control-label col-sm-1" for="passwd">
+									<span class="glyphicon glyphicon-lock big-icon"></span>
+								</label>
+								<div class="col-sm-11">
+									<input class="form-control" id="passwd" type="password" placeholder="Enter Password">
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-offset-1 col-sm-6 checkbox">
+				      			<label><input type="checkbox">Remember me</label>
+								</div>
+								<a class="col-sm-5" href="">Forget password?</a>
+							</div>
+							<button type="submit" class="btn btn-primary">Log In</button>
+						</form>
+						<a href="">or sign up</a>
 					</div>
-					<div class="form-group row">
-						<label class="control-label col-sm-1" for="passwd">
-							<span class="glyphicon glyphicon-lock"></span>
-						</label>
-						<div class="col-sm-11">
-							<input class="form-control" id="passwd" type="password" placeholder="Enter Password">
-						</div>
-					</div>
-					<div class="form-group row">
-						<div class="col-sm-offset-1 col-sm-6 checkbox">
-          		<label><input type="checkbox">Remember me</label>
-						</div>
-						<a class="col-sm-5" href="">Forget password?</a>
-					</div>
-					<button type="submit" class="btn btn-primary">Log In</button>
-				</form>
-				<a href="">or sign up</a>
+					<div class="tab-pane" id="professor">
+						To be announced
+					</div>	
+				</div>
 			</div>
 		</div>
 	</div>
+	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
