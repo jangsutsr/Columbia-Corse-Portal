@@ -1,0 +1,14 @@
+span.glyphicon-user {
+	font-size: 3rem;
+}
+span.glyphicon-lock {
+	font-size: 3rem;
+}
+div.checkbox {
+	text-align: left;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+div.checkbox + a {
+	text-align: right;
+}
