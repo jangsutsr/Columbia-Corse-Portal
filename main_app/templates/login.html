@@ -1,3 +1,4 @@
+{% import 'macros.html' as macros %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,6 +25,7 @@
 				<ul class="nav nav-tabs">
 					<li class="active"><a href="#user" data-toggle="tab">User</a></li>
 					<li><a href="#professor" data-toggle="tab">Professor</a></li>
+					<li><a href="#forgot" data-toggle="tab"></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="user">
@@ -34,7 +36,7 @@
 									<span class="glyphicon glyphicon-user big-icon"></span>
 								</label>
 								<div class="col-sm-11">
-									<input class="form-control" id="uni" type="text" placeholder="Enter UNI">
+									<input class="form-control" id="email" type="text" placeholder="Email (@columbia.edu or @barnard.edu)">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -47,19 +49,53 @@
 							</div>
 							<div class="form-group row">
 								<div class="col-sm-offset-1 col-sm-6 checkbox">
-				      			<label><input type="checkbox">Remember me</label>
+				      			<label><input type="checkbox">Remember Me</label>
 								</div>
-								<a class="col-sm-5" href="">Forget password?</a>
+								<a class="col-sm-5" href="#" data-toggle="modal" data-target="#forgotModal">Forgot Password?</a>
 							</div>
 							<button type="submit" class="btn btn-primary">Log In</button>
 						</form>
-						<a href="">or sign up</a>
+						<a href="#" data-toggle="modal" data-target="#regModal">or sign up</a>
 					</div>
 					<div class="tab-pane" id="professor">
 						To be announced
-					</div>	
+					</div>
 				</div>
 			</div>
+		</div>
+		<!-- Forgot Password Modal -->
+		<div class="modal fade" id="forgotModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Reset Password</h4>
+		      </div>
+		      <div class="modal-body">
+		        {{ macros.forgot() }}
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary">Reset Password</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<!-- Registration Modal -->
+		<div class="modal fade" id="regModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Register</h4>
+		      </div>
+		      <div class="modal-body">
+		        {{ macros.registration() }}
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-primary">Register</button>
+		      </div>
+		    </div>
+		  </div>
 		</div>
 	</div>
 	
