@@ -6,5 +6,5 @@ Note server behaviors here are for front-end design only at present.
 '''
 @app.route('/')
 def login():
-	return render_template('profile.html')
+	return render_template('login.html')
 
