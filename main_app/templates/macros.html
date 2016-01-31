@@ -1,1 +1,71 @@
-	
+{% macro registration() -%}
+<!-- Registration Modal -->
+<div class="modal fade" id="regModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Register</h4>
+      </div>
+      <div class="modal-body">
+		<form role="form">
+			<div class="form-group row">
+				<label class="control-label col-sm-1" for="uni">
+					<span class="glyphicon glyphicon-user big-icon"></span>
+				</label>
+				<div class="col-sm-11">
+					<input class="form-control" id="name" type="text" placeholder="Full Name">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="control-label col-sm-1" for="email">
+					<span class="glyphicon glyphicon-envelope big-icon"></span>
+				</label>
+				<div class="col-sm-11">
+					<input class="form-control" id="uni" type="text" placeholder="Email (@columbia.edu or @barnard.edu)">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="control-label col-sm-1" for="passwd">
+					<span class="glyphicon glyphicon-lock big-icon"></span>
+				</label>
+				<div class="col-sm-11">
+					<input class="form-control" id="passwd" type="password" placeholder="Password">
+				</div>
+			</div>
+			<div class="form-group row">
+				<label class="control-label col-sm-1" for="passwd">
+					<span class="glyphicon glyphicon-education big-icon"></span>
+				</label>
+				<div class="col-sm-11">
+					<select class="select-school" multiple="multiple">
+					  <option value="CC">CC</option>
+					  <option value="BARN">GS</option>
+					  <option value="BARN">GSAS</option>
+					  <option value="GS">SEAS</option>
+					  <option value="SEAS">Barnard</option>
+					</select>
+				</div>
+			</div>
+		</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Register</button>
+      </div>
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
+{% macro forgot() -%}
+<form role="form">
+	<div class="form-group row">
+		<label class="control-label col-sm-1" for="uni">
+			<span class="glyphicon glyphicon-user big-icon"></span>
+		</label>
+		<div class="col-sm-11">
+			<input class="form-control" id="email" type="text" placeholder="Email (@columbia.edu or @barnard.edu)">
+		</div>
+	</div>
+</form>
+{%- endmacro %}
