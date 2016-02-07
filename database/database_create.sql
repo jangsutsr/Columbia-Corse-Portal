@@ -1,5 +1,5 @@
 -- Entities
-CREATE TABLE professor(
+CREATE TABLE professor (
 	uni VARCHAR(10) NOT NULL,
 	e_mail TEXT,
 	PRIMARY KEY (uni) );
@@ -102,7 +102,7 @@ CREATE TABLE delete_doc (
 	FOREIGN KEY (doc_contributer, doc_id) REFERENCES document_upload (contributer, doc_id),
 	FOREIGN KEY (prof_uni) REFERENCES professor (uni));
 
-CREATE TABLE cover_course(
+CREATE TABLE cover_course (
 	course_prof_id VARCHAR(10) NOT NULL,
 	course_id VARCHAR(15) NOT NULL,
 	course_inspector_uni VARCHAR(10) NOT NULL,
@@ -110,7 +110,7 @@ CREATE TABLE cover_course(
 	FOREIGN KEY (course_prof_id, course_id) REFERENCES course_instruct (prof_uni, course_id),
 	FOREIGN KEY (course_inspector_uni) REFERENCES inspector (uni));
 
-CREATE TABLE inspect_doc(
+CREATE TABLE inspect_doc (
 	inspector_uni VARCHAR(10) NOT NULL,
 	doc_contributer VARCHAR(10) NOT NULL,
 	doc_id INTEGER NOT NULL,
@@ -118,15 +118,15 @@ CREATE TABLE inspect_doc(
 	FOREIGN KEY (inspector_uni) REFERENCES inspector,
 	FOREIGN KEY (doc_contributer, doc_id) REFERENCES document_upload (contributer, doc_id));
 
-CREATE TABLE inspect_review(
+CREATE TABLE inspect_review (
 	inspector_uni VARCHAR(10) NOT NULL,
 	review_writer VARCHAR(10) NOT NULL,
 	review_id INTEGER NOT NULL,
 	PRIMARY KEY (inspector_uni, review_writer, review_id),
-	FOREIGN KEY (inspector_uni) REFERENCES inspector (uni), 
+	FOREIGN KEY (inspector_uni) REFERENCES inspector (uni),
 	FOREIGN KEY (review_writer, review_id) REFERENCES review_write (writer, id));
 
-CREATE TABLE report_doc(
+CREATE TABLE report_doc (
 	client_uni VARCHAR(10) NOT NULL,
 	doc_contributer VARCHAR(10) NOT NULL,
 	doc_id INTEGER NOT NULL,
@@ -134,7 +134,7 @@ CREATE TABLE report_doc(
 	FOREIGN KEY (client_uni) REFERENCES client (uni),
 	FOREIGN KEY (doc_contributer, doc_id) REFERENCES document_upload (contributer, doc_id));
 
-CREATE TABLE vote_doc(
+CREATE TABLE vote_doc (
 	client_uni VARCHAR(10) NOT NULL,
 	doc_contributer VARCHAR(10) NOT NULL,
 	doc_id INTEGER NOT NULL,
@@ -142,7 +142,7 @@ CREATE TABLE vote_doc(
 	FOREIGN KEY (client_uni) REFERENCES client,
 	FOREIGN KEY (doc_contributer, doc_id) REFERENCES document_upload (contributer, doc_id));
 
-CREATE TABLE download_doc( 
+CREATE TABLE download_doc (
 	client_uni VARCHAR(10) NOT NULL,
 	doc_contributer VARCHAR(10) NOT NULL,
 	doc_id INTEGER NOT NULL,
@@ -150,11 +150,10 @@ CREATE TABLE download_doc(
 	FOREIGN KEY (client_uni) REFERENCES client (uni),
 	FOREIGN KEY (doc_contributer, doc_id) REFERENCES document_upload (contributer, doc_id));
 
-CREATE TABLE vote_review(
+CREATE TABLE vote_review (
 	client_uni VARCHAR(10) NOT NULL,
 	review_writer VARCHAR(10) NOT NULL,
 	review_id INTEGER NOT NULL,
 	PRIMARY KEY (client_uni, review_writer, review_id),
 	FOREIGN KEY (client_uni) REFERENCES client (uni),
 	FOREIGN KEY (review_writer, review_id) REFERENCES review_write (contributer, doc_id));
-
