@@ -10,7 +10,7 @@ $('#user-log-in').click(function(event) {
 	var data = $('#user-login-form').serializeArray();	
 	var usrName = data;
 	$.ajax({
-		url: '/ajax/login',
+		url: '/login',
 		type: 'POST',
 		data: data,
 		dataType: 'json',
@@ -92,7 +92,7 @@ $('#user-sign-up').click(function() {
 			warningMsg.remove();		
 		};	
 		$.ajax({
-			url: '/ajax/register',
+			url: '/register',
 			type: 'POST',
 			data: data,
 			success: function(response) {
