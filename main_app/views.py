@@ -8,7 +8,7 @@ Note server behaviors here are for front-end design only at present.
 @app.route('/')
 @app.route('/index')
 def index():
-    if 'uni' in request.cookies and request.cookies['uni'] == 'hehe':
+    if 'uni' in request.cookies and request.cookies['uni'] == 'hehehehe':
         return render_template('index.html')
     else:
         return redirect('/login')
