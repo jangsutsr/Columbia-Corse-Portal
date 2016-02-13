@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% set user, course_num = ['User', 'COMS4111']%}
+{% set is_inspector = False %}
+
+{% block title %}
+{{user}} - {{course_num}} - review
+{% endblock %}
+
+{% block body %}
+Course reviews
+{% endblock %}
+

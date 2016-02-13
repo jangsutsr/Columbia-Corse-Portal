@@ -21,6 +21,14 @@ def courses():
 def profile():
 	return render_template('profile.html')
 
+@app.route('/documents')
+def document():
+	return render_template('documents.html')
+    
+@app.route('/reviews')
+def reviews():
+	return render_template('reviews.html')
+    
 @app.route('/register', methods=['POST'])
 def ajax_register():
     for name in request.form:

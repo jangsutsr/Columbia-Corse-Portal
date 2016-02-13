@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	$('.select-school').select2({
-		placeholder: "School"
+		placeholder: "School",
 	});
 });
 

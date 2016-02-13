@@ -2,11 +2,67 @@
 {% from 'macros.html' import home_highlight %}
 
 {% set user="User" %}
+{% set fname="John" %}
+{% set lname="Doe" %}
+{% set email="jd1234@columbia.edu" %}
 
 {% block title %}
 {{user}} - Profile
 {% endblock %}
 
 {% block body %}
-Profile page for user
+  <div class="row">
+    <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+      <div class="alert alert-info alert-dismissable">
+        <a class="panel-close close" data-dismiss="alert">×</a> 
+        <i class="fa fa-coffee"></i>
+        This is an <strong>.alert</strong>. Use this to show important messages to the user.
+      </div>
+      <h3>My Profile</h3>
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label class="col-lg-3 control-label">First name:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="{{ fname }}" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Last name:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="{{ lname }}" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Email:</label>
+          <div class="col-lg-8">
+            <input class="form-control uneditable-input" value="{{ email }}" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Current Password:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="" type="password">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">New Password:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="" type="password">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Confirm New Password Password:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="" type="password">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-md-8">
+            <input class="btn btn-primary" value="Save Changes" type="button">
+            <span></span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 {% endblock %}
