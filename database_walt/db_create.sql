@@ -5,7 +5,9 @@ CREATE TABLE usr (
     e_mail TEXT UNIQUE,
     max_download_rate INTEGER,
     download_count INTEGER,
-    PRIMARY KEY (uni)
+    PRIMARY KEY (uni),
+	CHECK (max_download_rate > 0),
+	CHECK (download_count > 0)
 );
 CREATE TABLE professor (
     uni VARCHAR(10) NOT NULL,
@@ -23,7 +25,9 @@ CREATE TABLE course_teach (
     workload REAL,
     star REAL,
     FOREIGN KEY (prof_uni) REFERENCES professor (uni),
-    PRIMARY KEY (cid)
+    PRIMARY KEY (cid),
+	CHECK (workload > 0),
+	CHECK (star > 0)
 );
 -- Weak entity
 CREATE TABLE document_upload (
