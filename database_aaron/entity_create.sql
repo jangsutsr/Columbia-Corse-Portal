@@ -4,7 +4,6 @@ CREATE TABLE usr (
     e_mail TEXT,
     max_download_rate INTEGER,
     download_count INTEGER,
-    courses TEXT[],
     PRIMARY KEY (uni)
 );
 CREATE TABLE department (
@@ -27,17 +26,12 @@ CREATE TABLE affiliate (
 CREATE TABLE course (
     prof INTEGER NOT NULL,
     cid INTEGER NOT NULL,
-    dept INTEGER,
-    inspector VARCHAR(10),
     name TEXT,
     workload REAL,
     star REAL,
     comment_count INTEGER,
     PRIMARY KEY (prof, cid),
     FOREIGN KEY (prof) REFERENCES professor (id)
-        ON DELETE CASCADE,
-    FOREIGN KEY (dept) REFERENCES department (id),
-    FOREIGN KEY (inspector) REFERENCES usr (uni)
 );
 CREATE TABLE relate (
     course_prof INTEGER NOT NULL,
@@ -56,9 +50,9 @@ CREATE TABLE document (
     create_date DATE,
     star REAL,
     comment_count INTEGER,
+    report_count INTEGER,
     PRIMARY KEY (uni, did),
     FOREIGN KEY (uni) REFERENCES usr (uni)
-        ON DELETE CASCADE
 );
 CREATE TABLE review (
     uni VARCHAR(10) NOT NULL,
@@ -68,7 +62,7 @@ CREATE TABLE review (
     update_date DATE,
     star REAL,
     comment_count INTEGER,
+    report_count INTEGER,
     PRIMARY KEY (uni, rid),
     FOREIGN KEY (uni) REFERENCES usr (uni)
-        ON DELETE CASCADE
 );
