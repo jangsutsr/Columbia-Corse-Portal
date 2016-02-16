@@ -67,15 +67,16 @@ CREATE TABLE document (
 -- Weak Entity [document] ==> <write_for>
 CREATE TABLE review (
     rid SERIAL,
-    usr TEXT NOT NULL UNIQUE,
-    cid INTEGER NOT NULL UNIQUE,
-    prof INTEGER NOT NULL UNIQUE,
+    usr TEXT NOT NULL,
+    cid INTEGER NOT NULL,
+    prof INTEGER NOT NULL,
     content TEXT,
     create_date DATE,
     update_date DATE,
     star REAL,
     vote_count INTEGER,
     report_count INTEGER,
+	UNIQUE (usr, cid, prof),
     PRIMARY KEY (rid),
     FOREIGN KEY (usr) REFERENCES usr (e_mail),
     FOREIGN KEY (cid, prof) REFERENCES course (cid, prof)
