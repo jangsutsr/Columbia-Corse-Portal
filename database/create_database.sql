@@ -32,7 +32,7 @@ CREATE TABLE course (
     PRIMARY KEY (prof, cid),
     FOREIGN KEY (prof) REFERENCES professor (id)
 );
-CREATE TABLE take (
+CREATE TABLE subscribes (
     usr TEXT NOT NULL,
     course INTEGER NOT NULL,
     course_prof INTEGER NOT NULL,
@@ -48,7 +48,17 @@ CREATE TABLE relate (
     FOREIGN KEY (dept) REFERENCES department (id),
     FOREIGN KEY (course_prof, course_id) REFERENCES course (prof, cid)
 );
--- Weak Entity [document] ==> <upload_to>
+-- Aggregation [course]-<susbcribes>-[usr] 
+CREATE TABLE course_subscribes_usr (
+    usr TEXT NOT NULL,
+    cid INTEGER NOT NULL,
+    prof INTEGER NOT NULL,
+    PRIMARY KEY (usr, cid, prof),
+    FOREIGN KEY (usr) REFERENCES usr (e_mail),
+    FOREIGN KEY (cid, prof) REFERENCES course (cid, prof)
+);
+-- Weak Entity [document] ==> <upload>
+-- "Owned by" subscribes aggregation
 CREATE TABLE document (
     did SERIAL,
     usr TEXT NOT NULL,
@@ -60,11 +70,12 @@ CREATE TABLE document (
     star REAL,
     vote_count INTEGER,
     report_count INTEGER,
-    PRIMARY KEY (did),
-    FOREIGN KEY (usr) REFERENCES usr (e_mail),
-    FOREIGN KEY (cid, prof) REFERENCES course (cid, prof)
+    PRIMARY KEY (did, usr, cid, prof),
+    FOREIGN KEY (usr, cid, prof) REFERENCES course_subscribes_usr
+		ON DELETE CASCADE
 );
--- Weak Entity [document] ==> <write_for>
+-- Weak Entity [document] ==> <write>
+-- "Owned by" subscribes aggregation
 CREATE TABLE review (
     rid SERIAL,
     usr TEXT NOT NULL,
@@ -76,8 +87,7 @@ CREATE TABLE review (
     star REAL,
     vote_count INTEGER,
     report_count INTEGER,
-	UNIQUE (usr, cid, prof),
-    PRIMARY KEY (rid),
-    FOREIGN KEY (usr) REFERENCES usr (e_mail),
-    FOREIGN KEY (cid, prof) REFERENCES course (cid, prof)
+    PRIMARY KEY (rid, usr, cid, prof),
+    FOREIGN KEY (usr, cid, prof) REFERENCES course_subscribes_usr
+		ON DELETE CASCADE
 );

@@ -13,7 +13,7 @@ INSERT INTO usr (name, passwd, e_mail) VALUES
     ('Boyu Wang', 'badpassword321','bw2387@columbia.edu');
 
 -- take
-INSERT INTO take (usr, course, course_prof) VALUES
+INSERT INTO subscribes (usr, course, course_prof) VALUES
     ('wgm2110@columbia.edu', '4758', '12357'),
 	('wgm2110@columbia.edu', '6511', '12620'),
 	('wgm2110@columbia.edu', '6362', '11574'),
@@ -27,6 +27,14 @@ INSERT INTO take (usr, course, course_prof) VALUES
 	('bw2387@columbia.edu', '2387', '47'),
 	('bw2387@columbia.edu', '5150', '1777');
 
+-- course_subscribes_usr
+INSERT INTO course_subscribes_usr (usr, cid, prof) VALUES
+	('wgm2110@columbia.edu', '4758', '12357'),
+	('wgm2110@columbia.edu', '6511', '12620'),
+	('wgm2110@columbia.edu', '6362', '11574'),
+	('st2957@columbia.edu', '4758', '12357'),
+	('bw2387@columbia.edu', '2830', '2089');
+
 -- document
 INSERT INTO document (usr, cid, prof, name, file_location, 
 					create_date) VALUES
@@ -38,8 +46,7 @@ INSERT INTO document (usr, cid, prof, name, file_location,
 	 '/documents/12357-4758/studyguide.pdf', '2015-11-15');
 
 -- review
-INSERT INTO review (usr, cid, prof, content, create_date, 
-					star, vote_count, report_count) VALUES
+INSERT INTO review (usr, cid, prof, content, create_date, star, vote_count, report_count) VALUES
 	('wgm2110@columbia.edu', '4758', '12357',
 	 'This class was the greatest class ever. I am a better person because of it.',
 	'2014-10-05', '5.0', '5', '1'),
