@@ -26,8 +26,8 @@ CREATE TABLE course (
     prof INTEGER NOT NULL,
     cid INTEGER NOT NULL,
     name TEXT,
-    workload REAL,
-    star REAL,
+    workload REAL CHECK (workload < 5 AND workload >= 0),
+    star REAL CHECK (star < 5 AND star >= 0),
     vote_count INTEGER,
     PRIMARY KEY (prof, cid),
     FOREIGN KEY (prof) REFERENCES professor (id)
@@ -67,9 +67,9 @@ CREATE TABLE document (
     name TEXT,
     file_location TEXT,
     create_date DATE,
-    star REAL,
-    vote_count INTEGER,
-    report_count INTEGER,
+    star REAL CHECK (star < 5 AND star >= 0),
+    vote_count INTEGER CHECK (vote_count >= 0),
+    report_count INTEGER CHECK (report_count >= 0),
     PRIMARY KEY (did, usr, cid, prof),
     FOREIGN KEY (usr, cid, prof) REFERENCES course_subscribes_usr
 		ON DELETE CASCADE
@@ -84,9 +84,10 @@ CREATE TABLE review (
     content TEXT,
     create_date DATE,
     update_date DATE,
-    star REAL,
-    vote_count INTEGER,
-    report_count INTEGER,
+    star REAL CHECK (star < 5 AND star >= 0),
+    vote_count INTEGER CHECK (vote_count >= 0),
+    report_count INTEGER CHECK (report_count >= 0),
+	UNIQUE (usr, cid, prof),
     PRIMARY KEY (rid, usr, cid, prof),
     FOREIGN KEY (usr, cid, prof) REFERENCES course_subscribes_usr
 		ON DELETE CASCADE
