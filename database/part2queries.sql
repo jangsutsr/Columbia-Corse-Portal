@@ -8,7 +8,7 @@ WHERE P.id = A.prof AND A.dept = 7;
 
 SELECT DISTINCT U.name
 FROM usr U, review R, document D
-WHERE U.e_mail R.usr AND U.e_mail = D.usr;
+WHERE U.e_mail = R.usr AND U.e_mail = D.usr;
 
 -- What are the names of the Professors who have classes with both reviews and documents associated with them?
 
