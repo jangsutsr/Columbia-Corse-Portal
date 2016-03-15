@@ -34,13 +34,13 @@
 				<div class="tab-content">
 					<div class="tab-pane active" id="user">
 						<br>
-						<form id="user-login-form" role="form">
+						<form id="user-login-form" role="form" method="post">
 							<div class="form-group row">
 								<label class="control-label col-sm-1" for="uni">
-									<span class="glyphicon glyphicon-user big-icon"></span>
+									<span class="glyphicon glyphicon-envelope big-icon"></span>
 								</label>
 								<div class="col-sm-11">
-									<input class="form-control" name="uni" type="text" placeholder="Enter Uni">
+									<input class="form-control" name="email" type="text" placeholder="Enter Email">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -53,11 +53,11 @@
 							</div>
 							<div class="form-group row">
 								<div class="col-sm-offset-1 col-sm-6 checkbox">
-				      			<label><input type="checkbox">Remember Me</label>
+				      		<label><input type="checkbox">Remember Me</label>
 								</div>
 								<a class="col-sm-5" href="#" data-toggle="modal" data-target="#forgotModal">Forgot Password?</a>
 							</div>
-							<button id="user-log-in" type="buttom" class="btn btn-primary">Log In</button>
+							<button type="submit" value="" class="btn btn-primary">Log In</button>
 						</form>
 						<a href="#" data-toggle="modal" data-target="#regModal">or sign up</a>
 					</div>
@@ -83,7 +83,7 @@
 									<span class="glyphicon glyphicon-user big-icon"></span>
 								</label>
 								<div class="col-sm-11">
-									<input class="form-control" name="uni" type="text" placeholder="UNI">
+									<input class="form-control" name="name" type="text" placeholder="Name">
 								</div>
 							</div>
 							<div class="form-group row">
@@ -100,20 +100,6 @@
 								</label>
 								<div class="col-sm-11">
 									<input class="form-control" name="passwd" type="password" placeholder="Password (6~15 characters, MUST contain 0-9, a-z and A-Z)">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label class="control-label col-sm-1" for="school">
-									<span class="glyphicon glyphicon-education big-icon"></span>
-								</label>
-								<div class="col-sm-11">
-									<select class="select-school col-sm-11" multiple="multiple">
-										<option value="CC">CC</option>
-										<option value="BARN">GS</option>
-										<option value="BARN">GSAS</option>
-										<option value="GS">SEAS</option>
-										<option value="SEAS">Barnard</option>
-									</select>
 								</div>
 							</div>
 						</form>

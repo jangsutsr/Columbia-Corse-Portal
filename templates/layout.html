@@ -4,11 +4,11 @@
 	<title>{% block title %}{% endblock %}</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="shortcut icon" type="image/png" href="../static/images/favicon.png"/>
+  <link rel="shortcut icon" type="image/png" {{ url_for('static', filename='images/favicon.png') }}/>
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="../static/stylesheets/style.css">
+  <link rel="stylesheet" type="text/css" href={{ url_for('static', filename='stylesheets/style.css') }}>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="navbar navbar-default">
@@ -22,6 +22,7 @@
 		</div>
 		<!-- Dynamic Nav Items -->
 		<div class="collapse navbar-collapse" id="navToCollapse">
+      <!--
 			<ul class="nav navbar-nav text-center">
 			  <li {% if request.path == '/courses' %}class="active"{% endif %}>
 				  <a href="/courses">Courses</a>
@@ -32,15 +33,13 @@
 			  <li {% if request.path == '/documents' %}class="active"{% endif %}>
 				  <a href="/documents">Documents</a>
 			  </li>
-			  <!-- {% if is_inspector %}
-			  <li><a href="">Inspect</a></li>
-			  {% endif %} -->
-			</ul>
+			</ul> 
+      -->
 			<!-- {% block nav %}{% endblock %} -->
 			<ul class="nav navbar-nav navbar-right text-center">
 				<li><a href=""><span class="glyphicon glyphicon-search"></span></a></li>
 				<li><a href="/profile"><span class="glyphicon glyphicon-user"></span></a></li>
-				<li><a href="/login"><span class="glyphicon glyphicon-log-out"></span></a></li>
+				<li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span></a></li>
   		    </ul>
   	</div>
 	</div>
