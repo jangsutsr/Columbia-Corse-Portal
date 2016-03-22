@@ -147,14 +147,15 @@ def documents(prof, cid):
 def profile():
     if 'email' in session:
         conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT *
-                              FROM course AS c
-                              WHERE c.prof={} AND c.cid={};
-                              '''.format(int(prof), int(cid)))
-        for row in cursor:
-            print(row.items())
-        return render_template('profile.html')
+        # cursor = conn.execute('''
+        #                       SELECT *
+        #                       FROM course AS c
+        #                       WHERE c.prof={} AND c.cid={};
+        #                       '''.format(int(prof), int(cid)))
+        # for row in cursor:
+        #     print(row.items())
+        print session['email']
+        return render_template('profile.html', email = session['email'])
     else:
         return redirect(url_for('login'))
 
@@ -181,6 +182,7 @@ def login():
                               WHERE e_mail='{}' AND passwd='{}';
                               '''.format(request.form['email'], request.form['passwd']))
         for row in cursor:
+            print row['e_mail']
             session['email'] = row['e_mail']
             return redirect(url_for('index'))
         return redirect(url_for('login'))
