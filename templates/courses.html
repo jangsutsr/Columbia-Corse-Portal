@@ -9,16 +9,36 @@
 
 {% block nav %}
 <ul class="nav navbar-nav text-center">
-  <li class="active"><a href="">{{course_num}}</a></li>
   <li><a href="">Reviews</a></li>
-  <li><a href="">Documents</a></li> 
+  <li><a href="">Documents</a></li>
   <li><a href="">Contribute</a></li>
-  {% if is_inspector %}
-  <li><a href="">Inspect</a></li>
-  {% endif %}
+  <li class="active"><a href="">{{course_num}}</a></li>
 </ul>
 {% endblock %}
 
 {% block body %}
-Course overview
+  <!-- Table -->
+  <table id="courses_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
+     <thead>
+        <tr>
+           <th>Course</th>
+           <th>Professor</th>
+        </tr>
+     </thead>
+
+     <tbody>
+         {% for course in courses %}
+        <tr>
+              <td><a href="course.html">{{ course[0] }}</a></td>
+              <td><a href="prof.html">{{ course[1] }}</a></td>
+        </tr>
+        {% endfor %}
+     </tbody>
+
+  </table>
+
+<script src="../static/scripts/course.js"></script>
+<script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+
 {% endblock %}

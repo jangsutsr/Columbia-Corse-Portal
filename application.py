@@ -93,7 +93,7 @@ def navigate():
     else:
         return redirect(url_for('login'))
 
-@application.route('/course')
+@application.route('/courses')
 def course():
     if 'email' in session:
         conn = getattr(g, 'conn', None)
@@ -101,19 +101,18 @@ def course():
                               SELECT c.name, p.name
                               FROM course AS c, professor AS p
                               WHERE c.prof = p.id
-                              ORDER BY c.name
-                              LIMIT 10;
+                              ORDER BY c.name;
                               ''')
         courses = []
         for row in cursor:
             print row
             courses.append(row)
             # profs.append(row[1])
-        return render_template('course.html', courses=courses)
+        return render_template('courses.html', courses=courses, prof=prof)
     else:
         return redirect(url_for('login'))
 
-@application.route('/courses/<prof>/<cid>')
+@application.route('/course/<prof>/<cid>')
 def courses(prof, cid):
     ''' View function for a particular course.
     This view is supposed to give a general information of a course.
