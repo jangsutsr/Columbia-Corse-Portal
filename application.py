@@ -143,21 +143,33 @@ def documents(prof, cid):
     else:
         return redirect(url_for('login'))
 
-@application.route('/profile')
+@application.route('/profile', methods=['POST', 'GET'])
 def profile():
-    if 'email' in session:
-        conn = getattr(g, 'conn', None)
-        # cursor = conn.execute('''
-        #                       SELECT *
-        #                       FROM course AS c
-        #                       WHERE c.prof={} AND c.cid={};
-        #                       '''.format(int(prof), int(cid)))
-        # for row in cursor:
-        #     print(row.items())
-        print session['email']
-        return render_template('profile.html', email = session['email'])
+    conn = getattr(g, 'conn', None)
+    if request.method == 'GET':
+        if 'email' in session:
+            return render_template('profile.html', email = session['email'])
+        else:
+            return redirect(url_for('login'))
     else:
-        return redirect(url_for('login'))
+        cursor = conn.execute('''
+                              SELECT u.passwd
+                              FROM usr AS u
+                              WHERE u.e_mail='{}';
+                              '''.format(request.form['email']))
+        for row in cursor:
+            if row['passwd'] == request.form['passwd_origin']: break
+        else:
+            return 'no'
+        if request.form['passwd_change'] != request.form['passwd_validate']:
+            return 'no'
+        else:
+            conn.execute('''
+                         UPDATE usr
+                         SET passwd='{}'
+                         WHERE e_mail='{}';
+                         '''.format(request.form['passwd_change'], request.form['email']))
+            return 'yes'
 
 @application.route('/register', methods=['POST'])
 def register():

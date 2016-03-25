@@ -8,34 +8,34 @@
   <div class="row">
     <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
       <h3>My Profile</h3>
-      <form class="form-horizontal" role="form">
+      <form class="form-horizontal" role="form" method="post">
         <div class="form-group">
           <label class="col-lg-3 control-label">Email:</label>
           <div class="col-lg-8">
-            <input class="form-control" value="{{ email }}" type="text" readonly="readonly">
+            <input class="form-control" name="email" value="{{ email }}" type="text" readonly="readonly">
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">Current Password:</label>
           <div class="col-lg-8">
-            <input class="form-control" value="" type="password">
+            <input class="form-control" name="passwd_origin" type="password">
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">New Password:</label>
           <div class="col-lg-8">
-            <input class="form-control" value="" type="password">
+            <input class="form-control" name="passwd_change" type="password">
           </div>
         </div>
         <div class="form-group">
           <label class="col-lg-3 control-label">Confirm New Password:</label>
           <div class="col-lg-8">
-            <input class="form-control" value="" type="password">
+            <input class="form-control" name="passwd_validate" type="password">
           </div>
         </div>
         <div class="form-group">
           <div class="col-md-8">
-            <input class="btn btn-primary" value="Save Changes" type="button">
+            <input class="btn btn-primary" value="Save Changes" type="submit">
             <span></span>
           </div>
         </div>
