@@ -108,7 +108,7 @@ def course():
             print row
             courses.append(row)
             # profs.append(row[1])
-        return render_template('courses.html', courses=courses, prof=prof)
+        return render_template('courses.html', courses=courses)
     else:
         return redirect(url_for('login'))
 
