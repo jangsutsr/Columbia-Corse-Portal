@@ -45,15 +45,12 @@ def index():
                               ON c.cid=s.course AND c.prof=s.course_prof
                               WHERE s.usr = '{}';
                               '''.format(session['email']))
+        # put user subscribed courses into a row
+        courses = []
         for row in cursor:
-            print(row['n'], row['p'], row['c'])
-        cursor = conn.execute('''
-                              SELECT *
-                              FROM department;
-                              ''')
-        for row in cursor:
-            print(row.items())
-        return render_template('index.html')
+            courses.append(row[0])
+        return render_template('index.html',
+                                user=session['email'], courses=courses)
     else:
         return redirect(url_for('login'))
 
@@ -93,6 +90,26 @@ def navigate():
                 for row in cursor:
                     print(row.items())
                 return 'courses'
+    else:
+        return redirect(url_for('login'))
+
+@application.route('/course')
+def course():
+    if 'email' in session:
+        conn = getattr(g, 'conn', None)
+        cursor = conn.execute('''
+                              SELECT c.name, p.name
+                              FROM course AS c, professor AS p
+                              WHERE c.prof = p.id
+                              ORDER BY c.name
+                              LIMIT 10;
+                              ''')
+        courses = []
+        for row in cursor:
+            print row
+            courses.append(row)
+            # profs.append(row[1])
+        return render_template('course.html', courses=courses)
     else:
         return redirect(url_for('login'))
 
