@@ -27,6 +27,7 @@ def disconn_db(exception):
     conn = getattr(g, 'conn', None)
     if conn is not None:
         conn.close()
+        print 'close'
 
 @application.route('/')
 def index():
@@ -148,7 +149,7 @@ def profile():
     conn = getattr(g, 'conn', None)
     if request.method == 'GET':
         if 'email' in session:
-            return render_template('profile.html', email = session['email'])
+            return render_template('profile.html', email = session['email'], is_valid='yes')
         else:
             return redirect(url_for('login'))
     else:
@@ -160,16 +161,16 @@ def profile():
         for row in cursor:
             if row['passwd'] == request.form['passwd_origin']: break
         else:
-            return 'no'
+            return render_template('profile.html', email = session['email'], is_valid='no')
         if request.form['passwd_change'] != request.form['passwd_validate']:
-            return 'no'
+            return render_template('profile.html', email = session['email'], is_valid='no')
         else:
             conn.execute('''
                          UPDATE usr
                          SET passwd='{}'
                          WHERE e_mail='{}';
                          '''.format(request.form['passwd_change'], request.form['email']))
-            return 'yes'
+            return render_template('profile.html', email = session['email'], is_valid='yes')
 
 @application.route('/register', methods=['POST'])
 def register():

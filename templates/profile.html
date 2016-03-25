@@ -36,6 +36,9 @@
         <div class="form-group">
           <div class="col-md-8">
             <input class="btn btn-primary" value="Save Changes" type="submit">
+            {% if is_valid == 'no' %}
+            <p>unsuccessful changes</p>
+            {% endif %}
             <span></span>
           </div>
         </div>
