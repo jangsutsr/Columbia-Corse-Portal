@@ -52,7 +52,7 @@ def index():
             if course_id not in to_delete:
                 url.append('/courses/'+'/'.join(map(str, row[:3]))); name.append(row[3])
                 to_delete.append(course_id)
-        return render_template('index.html', url=url, name=name, user=session['name'], to_delete=to_delete)
+        return render_template('index.html', url=url, name=name, user=session['email'], to_delete=to_delete)
     else:
         return redirect(url_for('login'))
 
@@ -80,7 +80,7 @@ def nav_dept():
         urls = []; names = []
         for row in cursor:
             urls.append('/courses/'+str(row[0])); names.append(row[1])
-        return render_template('courses.html', url=urls, name=names, header='departments', user=session['name'])
+        return render_template('courses.html', url=urls, name=names, header='departments', user=session['email'])
     else:
         return redirect(url_for('login'))
 
@@ -98,7 +98,7 @@ def nav_prof(did):
         urls = []; names = []
         for row in cursor:
             urls.append('/courses/'+did+'/'+str(row[0])); names.append(row[1])
-        return render_template('courses.html', url=urls, name=names, header='professors', user=session['name'])
+        return render_template('courses.html', url=urls, name=names, header='professors', user=session['email'])
     else:
         return redirect(url_for('login'))
 
@@ -114,7 +114,7 @@ def nav_course(did, pid):
         urls = []; names = []
         for row in cursor:
             urls.append('/courses/'+did+'/'+pid+'/'+str(row[0])); names.append(row[1])
-        return render_template('courses.html', url=urls, name=names, header='courses', user=session['name'])
+        return render_template('courses.html', url=urls, name=names, header='courses', user=session['email'])
     else:
         return redirect(url_for('login'))
 
@@ -132,7 +132,7 @@ def course_info(did, pid, cid):
                               '''.format(int(pid), int(cid)))
         for row in cursor:
             print(row.items())
-        return render_template('courses.html', user=session['name'])
+        return render_template('courses.html', user=session['email'])
     else:
         return redirect(url_for('login'))
 
@@ -147,7 +147,7 @@ def reviews(prof, cid):
                               '''.format(int(prof), int(cid)))
         for row in cursor:
             print(row.items())
-        return render_template('reviews.html', user=session['name'])
+        return render_template('reviews.html', user=session['email'])
     else:
         return redirect(url_for('login'))
 
@@ -162,7 +162,7 @@ def documents(prof, cid):
                               '''.format(int(prof), int(cid)))
         for row in cursor:
             print(row.items())
-        return render_template('documents.html', user=session['name'])
+        return render_template('documents.html', user=session['email'])
     else:
         return redirect(url_for('login'))
 
@@ -171,7 +171,7 @@ def profile():
     conn = getattr(g, 'conn', None)
     if request.method == 'GET':
         if 'email' in session:
-            return render_template('profile.html', email = session['email'], is_valid='yes', user=session['name'])
+            return render_template('profile.html', email = session['email'], is_valid='yes', user=session['email'])
         else:
             return redirect(url_for('login'))
     else:
@@ -183,16 +183,16 @@ def profile():
         for row in cursor:
             if row['passwd'] == request.form['passwd_origin']: break
         else:
-            return render_template('profile.html', email = session['email'], is_valid='no', user=session['name'])
+            return render_template('profile.html', email = session['email'], is_valid='no', user=session['email'])
         if request.form['passwd_change'] != request.form['passwd_validate']:
-            return render_template('profile.html', email = session['email'], is_valid='no', user=session['name'])
+            return render_template('profile.html', email = session['email'], is_valid='no', user=session['email'])
         else:
             conn.execute('''
                          UPDATE usr
                          SET passwd='{}'
                          WHERE e_mail='{}';
                          '''.format(request.form['passwd_change'], request.form['email']))
-            return render_template('profile.html', email=session['email'], is_valid='yes', user=session['name'])
+            return render_template('profile.html', email=session['email'], is_valid='yes', user=session['email'])
 
 @application.route('/register', methods=['POST'])
 def register():

@@ -26,17 +26,13 @@
 		<div class="collapse navbar-collapse" id="navToCollapse">
 
 			<ul class="nav navbar-nav text-center">
-        <li><a href="">Welcome, {{ user }}!</a></li>
-			  <li {% if request.path == '/courses' %}class="active"{% endif %}>
+				<li {% if request.path == '/courses' %}class="active"{% endif %}>
 				  <a href="/courses">Courses</a>
 			  </li>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right text-center">
-        <!--
-				<li><a href=""><span class="glyphicon glyphicon-search"></span></a></li>
-				<li><a href="/profile"><span class="glyphicon glyphicon-user"></span></a></li>
-        -->
+				<li><a href="/profile">Welcome, {{ user }}!</a></li>
 				<li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span></a></li>
   		</ul>
   	</div>
