@@ -80,7 +80,7 @@ def nav_dept():
         urls = []; names = []
         for row in cursor:
             urls.append('/courses/'+str(row[0])); names.append(row[1])
-        return render_template('courses.html', url=urls, name=names, header='departments', user=session['email'])
+        return render_template('courses.html', url=urls, name=names, header='Departments', user=session['email'])
     else:
         return redirect(url_for('login'))
 
@@ -98,7 +98,7 @@ def nav_prof(did):
         urls = []; names = []
         for row in cursor:
             urls.append('/courses/'+did+'/'+str(row[0])); names.append(row[1])
-        return render_template('courses.html', url=urls, name=names, header='professors', user=session['email'])
+        return render_template('courses.html', url=urls, name=names, header='Professors', user=session['email'])
     else:
         return redirect(url_for('login'))
 
@@ -114,7 +114,7 @@ def nav_course(did, pid):
         urls = []; names = []
         for row in cursor:
             urls.append('/courses/'+did+'/'+pid+'/'+str(row[0])); names.append(row[1])
-        return render_template('courses.html', url=urls, name=names, header='courses', user=session['email'])
+        return render_template('courses.html', url=urls, name=names, header='Courses', user=session['email'])
     else:
         return redirect(url_for('login'))
 
@@ -132,7 +132,7 @@ def course_info(did, pid, cid):
                               '''.format(int(pid), int(cid)))
         for row in cursor:
             print(row.items())
-        return render_template('courses.html', user=session['email'])
+        return render_template('course.html', user=session['email'])
     else:
         return redirect(url_for('login'))
 
