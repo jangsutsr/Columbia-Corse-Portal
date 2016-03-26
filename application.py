@@ -128,11 +128,21 @@ def course_info(did, pid, cid):
         cursor = conn.execute('''
                               SELECT *
                               FROM course AS c
+                              JOIN professor AS p ON c.prof = p.id
                               WHERE c.prof={} AND c.cid={};
                               '''.format(int(pid), int(cid)))
         for row in cursor:
-            print(row.items())
-        return render_template('course.html', user=session['email'])
+            course_name = row[2]
+            prof_name = row[7]
+        reviews = conn.execute('''
+                              SELECT *
+                              FROM review AS r
+                              WHERE r.prof={} AND r.cid={};
+                              '''.format(int(pid), int(cid)))
+        reviews = list(reviews)
+        return render_template('course.html', user=session['email'],
+                                course_name=course_name, prof_name=prof_name,
+                                reviews=reviews)
     else:
         return redirect(url_for('login'))
 
