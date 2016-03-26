@@ -39,81 +39,87 @@ def index():
     if 'email' in session:
         conn = getattr(g, 'conn', None)
         cursor = conn.execute('''
-                              SELECT c.name AS n, c.prof AS p, c.cid AS c
+                              SELECT a.dept, c.prof, c.cid, c.name
                               FROM course AS c
-                              JOIN subscribes AS s
-                              ON c.cid=s.course AND c.prof=s.course_prof
+                              JOIN affiliate AS a ON a.prof=c.prof
+                              JOIN subscribes AS s ON c.cid=s.course AND c.prof=s.course_prof
                               WHERE s.usr = '{}';
                               '''.format(session['email']))
         # put user subscribed courses into a row
-        courses = []
+        url = []; name = []; to_delete = []
         for row in cursor:
-            courses.append(row[0])
-        return render_template('index.html',
-                                user=session['email'], courses=courses)
+            course_id = '/delete/'+'/'.join(map(str, row[1:3]))
+            if course_id not in to_delete:
+                url.append('/courses/'+'/'.join(map(str, row[:3]))); name.append(row[3])
+                to_delete.append(course_id)
+        return render_template('index.html', url=url, name=name, user=session['name'], to_delete=to_delete)
     else:
         return redirect(url_for('login'))
 
-@application.route('/navigate')
-def navigate():
-    ''' View function for navigations.
-    Here the navigation info is represented by REST querys. query
-    'dept' prompts for navigating professors affiliating particular
-    department; 'prof' alone prompts for navigating courses taught
-    by particular professor; 'prof' along with 'course' redirects
-    to corresponding course page.
-    '''
+@application.route('/delete/<pid>/<cid>')
+def delete_course(pid, cid):
     if 'email' in session:
         conn = getattr(g, 'conn', None)
-        if 'dept' in request.args:
-            index = request.args['dept']
-            cursor = conn.execute('''
-                                  SELECT p.id AS id, p.name AS name
-                                  FROM professor AS p
-                                  JOIN affiliate AS a ON a.prof=p.id
-                                  JOIN department AS d ON d.id=a.dept
-                                  WHERE d.id={};
-                                  '''.format(int(index)))
-            for row in cursor:
-                print(row.items())
-            return 'profs'
-        if 'prof' in request.args:
-            if 'course' in request.args:
-                return redirect(url_for('/'.join(['/courses', request.args['prof'], request.args['course']])))
-            else:
-                index = request.args['prof']
-                cursor = conn.execute('''
-                                      SELECT c.cid AS id, c.name AS name
-                                      FROM course AS c
-                                      WHERE c.prof={};
-                                      '''.format(int(index)))
-                for row in cursor:
-                    print(row.items())
-                return 'courses'
+        conn.execute('''
+                     DELETE FROM subscribes AS s
+                     WHERE s.course={} AND s.course_prof={};
+                     '''.format(str(cid), str(pid)))
+        return redirect(url_for('index'))
     else:
         return redirect(url_for('login'))
 
 @application.route('/courses')
-def course():
+def nav_dept():
     if 'email' in session:
         conn = getattr(g, 'conn', None)
         cursor = conn.execute('''
-                              SELECT c.name, p.name
-                              FROM course AS c, professor AS p
-                              WHERE c.prof = p.id
-                              ORDER BY c.name;
+                              SELECT *
+                              FROM department AS d
+                              ORDER BY name;
                               ''')
-        courses = []
+        urls = []; names = []
         for row in cursor:
-            print row
-            courses.append(row)
-            # profs.append(row[1])
-        return render_template('courses.html', courses=courses)
+            urls.append('/courses/'+str(row[0])); names.append(row[1])
+        return render_template('courses.html', url=urls, name=names, header='departments', user=session['name'])
     else:
         return redirect(url_for('login'))
 
-@application.route('/course/<prof>/<cid>')
-def courses(prof, cid):
+@application.route('/courses/<did>')
+def nav_prof(did):
+    if 'email' in session:
+        conn = getattr(g, 'conn', None)
+        cursor = conn.execute('''
+                              SELECT p.id, p.name
+                              FROM professor AS p
+                              JOIN affiliate AS a ON p.id=a.prof
+                              JOIN department AS d on d.id=a.dept
+                              WHERE d.id={};
+                              '''.format(int(did)))
+        urls = []; names = []
+        for row in cursor:
+            urls.append('/courses/'+did+'/'+str(row[0])); names.append(row[1])
+        return render_template('courses.html', url=urls, name=names, header='professors', user=session['name'])
+    else:
+        return redirect(url_for('login'))
+
+@application.route('/courses/<did>/<pid>')
+def nav_course(did, pid):
+    if 'email' in session:
+        conn = getattr(g, 'conn', None)
+        cursor = conn.execute('''
+                              SELECT c.cid, c.name
+                              FROM course AS c
+                              WHERE c.prof={};
+                              '''.format(int(pid)))
+        urls = []; names = []
+        for row in cursor:
+            urls.append('/courses/'+did+'/'+pid+'/'+str(row[0])); names.append(row[1])
+        return render_template('courses.html', url=urls, name=names, header='courses', user=session['name'])
+    else:
+        return redirect(url_for('login'))
+
+@application.route('/courses/<did>/<pid>/<cid>')
+def course_info(did, pid, cid):
     ''' View function for a particular course.
     This view is supposed to give a general information of a course.
     '''
@@ -123,10 +129,10 @@ def courses(prof, cid):
                               SELECT *
                               FROM course AS c
                               WHERE c.prof={} AND c.cid={};
-                              '''.format(int(prof), int(cid)))
+                              '''.format(int(pid), int(cid)))
         for row in cursor:
             print(row.items())
-        return render_template('courses.html')
+        return render_template('courses.html', user=session['name'])
     else:
         return redirect(url_for('login'))
 
@@ -141,7 +147,7 @@ def reviews(prof, cid):
                               '''.format(int(prof), int(cid)))
         for row in cursor:
             print(row.items())
-        return render_template('reviews.html')
+        return render_template('reviews.html', user=session['name'])
     else:
         return redirect(url_for('login'))
 
@@ -156,7 +162,7 @@ def documents(prof, cid):
                               '''.format(int(prof), int(cid)))
         for row in cursor:
             print(row.items())
-        return render_template('documents.html')
+        return render_template('documents.html', user=session['name'])
     else:
         return redirect(url_for('login'))
 
@@ -165,7 +171,7 @@ def profile():
     conn = getattr(g, 'conn', None)
     if request.method == 'GET':
         if 'email' in session:
-            return render_template('profile.html', email = session['email'], is_valid='yes')
+            return render_template('profile.html', email = session['email'], is_valid='yes', user=session['name'])
         else:
             return redirect(url_for('login'))
     else:
@@ -177,16 +183,16 @@ def profile():
         for row in cursor:
             if row['passwd'] == request.form['passwd_origin']: break
         else:
-            return render_template('profile.html', email = session['email'], is_valid='no')
+            return render_template('profile.html', email = session['email'], is_valid='no', user=session['name'])
         if request.form['passwd_change'] != request.form['passwd_validate']:
-            return render_template('profile.html', email = session['email'], is_valid='no')
+            return render_template('profile.html', email = session['email'], is_valid='no', user=session['name'])
         else:
             conn.execute('''
                          UPDATE usr
                          SET passwd='{}'
                          WHERE e_mail='{}';
                          '''.format(request.form['passwd_change'], request.form['email']))
-            return render_template('profile.html', email = session['email'], is_valid='yes')
+            return render_template('profile.html', email=session['email'], is_valid='yes', user=session['name'])
 
 @application.route('/register', methods=['POST'])
 def register():
@@ -206,13 +212,14 @@ def login():
     if request.method == 'POST':
         conn = getattr(g, 'conn', None)
         cursor = conn.execute('''
-                              SELECT e_mail, passwd
+                              SELECT *
                               FROM usr
                               WHERE e_mail='{}' AND passwd='{}';
                               '''.format(request.form['email'], request.form['passwd']))
         for row in cursor:
             print row['e_mail']
             session['email'] = row['e_mail']
+            session['name'] = row['name']
             return redirect(url_for('index'))
         return redirect(url_for('login'))
     else:
@@ -221,6 +228,7 @@ def login():
 @application.route('/logout')
 def logout():
     session.pop('email', None)
+    session.pop('name', None)
     return redirect(url_for('login'))
 
 if __name__ == '__main__':

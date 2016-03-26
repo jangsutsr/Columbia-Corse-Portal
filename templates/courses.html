@@ -1,19 +1,7 @@
 {% extends 'layout.html' %}
 
-{% set user, course_num = ['User', 'COMS4111']%}
-{% set is_inspector = False %}
-
 {% block title %}
-{{user}} - {{course_num}} - overview
-{% endblock %}
-
-{% block nav %}
-<ul class="nav navbar-nav text-center">
-  <li><a href="">Reviews</a></li>
-  <li><a href="">Documents</a></li>
-  <li><a href="">Contribute</a></li>
-  <li class="active"><a href="">{{course_num}}</a></li>
-</ul>
+{{user}} - overview
 {% endblock %}
 
 {% block body %}
@@ -21,16 +9,14 @@
   <table id="courses_table" class="table table-striped table-bordered" cellspacing="0" width="100%">
      <thead>
         <tr>
-           <th>Course</th>
-           <th>Professor</th>
+          <th>{{ header }}</th>
         </tr>
      </thead>
 
      <tbody>
-         {% for course in courses %}
+         {% for item in name %}
         <tr>
-              <td><a href="course.html">{{ course[0] }}</a></td>
-              <td><a href="prof.html">{{ course[1] }}</a></td>
+          <td><a href={{ url[loop.index0] }}>{{ item }}</a></td>
         </tr>
         {% endfor %}
      </tbody>

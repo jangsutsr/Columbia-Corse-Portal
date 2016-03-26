@@ -15,20 +15,20 @@
   <!-- My Courses List -->
   <div class="panel-body">
 	<div class="list-group">
-		{% for course in courses %}
+		{% for item in name %}
 		  <button type="button" class="list-group-item">
-			  <b>{{ course }}</b>
+        <a href="{{ url[loop.index0] }}"><b>{{ item }}</b></a>
 	          <div class="pull-right action-buttons">
-	               <a href=""><span class="glyphicon glyphicon-trash"></span></a>
+              <a href="{{ to_delete[loop.index0] }}"><span class="glyphicon glyphicon-trash"></span></a>
 	           </div>
 		  </button>
 		  {% endfor %}
-	</div>
-     <!-- add courses button -->
-    <button type="button" class="btn btn-success btn-md">
-    <span class="glyphicon glyphicon-glyphicon glyphicon-plus" aria-hidden="true"></span> Add Course
-    </button>
-   </div>
+    </div>
+       <!-- add courses button -->
+       <button type="button" class="btn btn-success btn-md"><a href="/courses">
+          <span class="glyphicon glyphicon-glyphicon glyphicon-plus" aria-hidden="true"></span> Add Course
+        </a></button>
+     </div>
   </div>
 </div>
 

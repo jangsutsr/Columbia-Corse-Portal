@@ -1,19 +1,8 @@
 {% extends 'layout.html' %}
 
-{% set user, course_num = ['User', 'COMS4111']%}
-{% set is_inspector = False %}
 
 {% block title %}
-{{user}} - {{course_num}} - overview
-{% endblock %}
-
-{% block nav %}
-<ul class="nav navbar-nav text-center">
-  <li><a href="">Reviews</a></li>
-  <li><a href="">Documents</a></li>
-  <li><a href="">Contribute</a></li>
-  <li class="active"><a href="">{{course_num}}</a></li>
-</ul>
+{{user}} - course
 {% endblock %}
 
 {% block body %}
