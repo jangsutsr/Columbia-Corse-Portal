@@ -1,6 +1,6 @@
 from flask import Flask, request, session, g
 from flask import render_template, redirect, make_response, url_for
-import json
+import json, datetime
 import psycopg2
 from sqlalchemy import create_engine
 
@@ -118,46 +118,46 @@ def nav_course(did, pid):
     else:
         return redirect(url_for('login'))
 
-@application.route('/courses/<did>/<pid>/<cid>')
+@application.route('/courses/<did>/<pid>/<cid>', methods=['POST', 'GET'])
 def course_info(did, pid, cid):
     ''' View function for a particular course.
     This view is supposed to give a general information of a course.
     '''
     if 'email' in session:
-        conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT *
-                              FROM course AS c
-                              JOIN professor AS p ON c.prof = p.id
-                              WHERE c.prof={} AND c.cid={};
-                              '''.format(int(pid), int(cid)))
-        for row in cursor:
-            course_name = row[2]
-            prof_name = row[7]
-        reviews = conn.execute('''
-                              SELECT *
-                              FROM review AS r
-                              WHERE r.prof={} AND r.cid={};
-                              '''.format(int(pid), int(cid)))
-        reviews = list(reviews)
-        return render_template('course.html', user=session['email'],
-                                course_name=course_name, prof_name=prof_name,
-                                reviews=reviews)
-    else:
-        return redirect(url_for('login'))
-
-@application.route('/reviews/<prof>/<cid>')
-def reviews(prof, cid):
-    if 'email' in session:
-        conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT *
-                              FROM review AS r
-                              WHERE r.prof={} AND r.cid={};
-                              '''.format(int(prof), int(cid)))
-        for row in cursor:
-            print(row.items())
-        return render_template('reviews.html', user=session['email'])
+        if request.method == 'GET':
+            conn = getattr(g, 'conn', None)
+            cursor = conn.execute('''
+                                  SELECT *
+                                  FROM course AS c
+                                  JOIN professor AS p ON c.prof = p.id
+                                  WHERE c.prof={} AND c.cid={};
+                                  '''.format(int(pid), int(cid)))
+            for row in cursor:
+                course_name = row[2]
+                prof_name = row[7]
+            reviews = conn.execute('''
+                                  SELECT *
+                                  FROM review AS r
+                                  WHERE r.prof={} AND r.cid={};
+                                  '''.format(int(pid), int(cid)))
+            reviews = list(reviews)
+            return render_template('course.html', user=session['email'],
+                                    course_name=course_name, prof_name=prof_name,
+                                    reviews=reviews, did=did, pid=pid, cid=cid)
+        elif request.method == 'POST':
+            print request.form['comment']
+            now = datetime.datetime.now()
+            now.strftime("%Y-%m-%d")
+            conn = getattr(g, 'conn', None)
+            cursor = conn.execute('''
+                                  INSERT INTO course_subscribes_usr (usr, cid, prof)
+                                  VALUES ('{}', '{}', '{}');
+                                  '''.format(session['email'], int(cid), int(pid)))
+            cursor = conn.execute('''
+                                  INSERT INTO review (usr, cid, prof, content, create_date)
+                                  VALUES ('{}', '{}', '{}', '{}', '{}');
+                                  '''.format(session['email'], int(cid), int(pid), request.form['comment'], now))
+            return redirect('/courses/' + did + '/' + pid + '/' + cid)
     else:
         return redirect(url_for('login'))
 
