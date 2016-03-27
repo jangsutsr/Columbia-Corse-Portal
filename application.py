@@ -146,18 +146,14 @@ def course_info(did, pid, cid):
     else:
         return redirect(url_for('login'))
 
-@application.route('/reviews/<prof>/<cid>')
+@application.route('/review/<rid>/<usr>/<cid>/<prof>', methods=['GET', 'POST'])
 def reviews(prof, cid):
     if 'email' in session:
         conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT *
-                              FROM review AS r
-                              WHERE r.prof={} AND r.cid={};
-                              '''.format(int(prof), int(cid)))
-        for row in cursor:
-            print(row.items())
-        return render_template('reviews.html', user=session['email'])
+        if request.method == 'GET':
+            pass
+        else:
+            pass
     else:
         return redirect(url_for('login'))
 
