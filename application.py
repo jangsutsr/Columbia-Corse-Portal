@@ -52,7 +52,17 @@ def index():
             if course_id not in to_delete:
                 url.append('/courses/'+'/'.join(map(str, row[:3]))); name.append(row[3])
                 to_delete.append(course_id)
-        return render_template('index.html', url=url, name=name, user=session['email'], to_delete=to_delete)
+        all_courses = conn.execute('''
+                                   SELECT p.name, c.name, c.prof, c.cid
+                                   FROM course AS c, professor AS p
+                                   WHERE c.prof = p.id;
+                                   ''')
+        all_courses_lst = []
+        for row in all_courses:
+            all_courses_lst.append(row)
+        return render_template('index.html', url=url, name=name,
+                               user=session['email'], to_delete=to_delete,
+                               all_courses_lst=all_courses_lst)
     else:
         return redirect(url_for('login'))
 
@@ -64,6 +74,18 @@ def delete_course(pid, cid):
                      DELETE FROM subscribes AS s
                      WHERE s.course={} AND s.course_prof={};
                      '''.format(str(cid), str(pid)))
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for('login'))
+
+@application.route('/add/<pid>/<cid>')
+def add_course(pid, cid):
+    if 'email' in session:
+        conn = getattr(g, 'conn', None)
+        conn.execute('''
+                     INSERT INTO subscribes (usr, course, course_prof)
+                     VALUES ('{}', '{}', '{}');
+                     '''.format(session['email'], int(cid), int(pid)))
         return redirect(url_for('index'))
     else:
         return redirect(url_for('login'))
@@ -149,6 +171,7 @@ def course_info(did, pid, cid):
             now = datetime.datetime.now()
             now.strftime("%Y-%m-%d")
             conn = getattr(g, 'conn', None)
+            # Insert data for review
             cursor = conn.execute('''
                                   INSERT INTO course_subscribes_usr (usr, cid, prof)
                                   VALUES ('{}', '{}', '{}');
