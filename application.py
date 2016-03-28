@@ -157,6 +157,8 @@ def course_info(did, pid, cid):
             for row in cursor:
                 course_name = row[2]
                 prof_name = row[7]
+                workload = row[3]
+                rating = row[4]
             reviews = conn.execute('''
                                   SELECT *
                                   FROM review AS r
@@ -165,9 +167,9 @@ def course_info(did, pid, cid):
             reviews = list(reviews)
             return render_template('course.html', user=session['email'],
                                     course_name=course_name, prof_name=prof_name,
-                                    reviews=reviews, did=did, pid=pid, cid=cid)
+                                    reviews=reviews, did=did, pid=pid, cid=cid,
+                                    rating=rating, workload=workload)
         elif request.method == 'POST':
-            print request.form['comment']
             now = datetime.datetime.now()
             now.strftime("%Y-%m-%d")
             conn = getattr(g, 'conn', None)
@@ -180,6 +182,63 @@ def course_info(did, pid, cid):
                                   INSERT INTO review (usr, cid, prof, content, create_date)
                                   VALUES ('{}', '{}', '{}', '{}', '{}');
                                   '''.format(session['email'], int(cid), int(pid), request.form['comment'], now))
+            return redirect('/courses/' + did + '/' + pid + '/' + cid)
+    else:
+        return redirect(url_for('login'))
+
+@application.route('/courses/rate/<did>/<pid>/<cid>', methods=['POST', 'GET'])
+def rate_course(did, pid, cid):
+    ''' Function to rate a particular course.
+    '''
+    if 'email' in session:
+        if request.method == 'POST':
+            conn = getattr(g, 'conn', None)
+            # first get current rating, workload, and vote count
+            course = conn.execute('''
+                                  SELECT c.name, c.workload, c.star, c.vote_count
+                                  FROM course AS c
+                                  WHERE c.prof={} AND c.cid={};
+                                  '''.format(int(pid), int(cid)))
+            for row in course:
+                votes = row
+            course_name = votes[0]
+            # the first vote!
+            if votes[3] == None:
+                cursor = conn.execute('''
+                                      UPDATE course AS c
+                                      SET workload = '{}',
+                                      star = '{}',
+                                      vote_count = '{}'
+                                      WHERE prof = '{}' AND cid = '{}';
+                                      '''.format(float(request.form['workload']),
+                                                 float(request.form['stars']), 1,
+                                                 int(pid), int(cid)))
+                return redirect('/courses/' + did + '/' + pid + '/' + cid)
+            # not the first vote, so take this vote with weighted moving average
+            else:
+                curr_stars = float(votes[1])
+                curr_workload = float(votes[2])
+                curr_votes = votes[3]
+                # new weighted moving average of workload
+                print (curr_workload * curr_votes) + float(request.form['workload'])
+                print (curr_votes + 1)
+                new_workload = (((curr_workload * curr_votes) + float(request.form['workload'])) / (curr_votes + 1))
+                print new_workload
+                # new weighted moving average of stars
+                new_stars = (((curr_stars * curr_votes) + float(request.form['stars'])) / (curr_votes + 1))
+                print new_stars
+                # insert values and iterate vote count
+                cursor = conn.execute('''
+                                      UPDATE course AS c
+                                      SET workload = '{}',
+                                      star = '{}',
+                                      vote_count = '{}'
+                                      WHERE prof = '{}' AND cid = '{}';
+                                      '''.format(new_workload, new_stars,
+                                                 curr_votes + 1,
+                                                 int(pid), int(cid)))
+            return redirect('/courses/' + did + '/' + pid + '/' + cid)
+        else:
             return redirect('/courses/' + did + '/' + pid + '/' + cid)
     else:
         return redirect(url_for('login'))

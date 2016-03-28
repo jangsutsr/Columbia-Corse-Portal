@@ -4,6 +4,9 @@
 <div class="blog-header">
   <h1 class="blog-title text-center">{{ course_name }}</h1>
   <p class="lead blog-description text-center">{{ prof_name }}</p>
+  <a data-toggle="modal" href="#rateModal"><h5 class="text-center">Rating {{ rating }} ☆</h5></a>
+  <a data-toggle="modal" href="#rateModal"><h5 class="text-center">Workload {{ workload }} 💪</h5></a>
+  <p class="lead blog-description text-center"></p>
 </div>
 <!-- My Courses List -->
 <div class="col-lg-5 col-lg-offset-1">
@@ -51,7 +54,9 @@
               <!-- review content -->
               <p class="list-group-item-text">{{ review[4] }}</p>
               <!-- user -->
-              <h5 class="list-group-item-text">{{ review[1] }}</h5>
+              <h5 class="list-group-item-text">{{ review[1] }} on {{ review[5] }}</h5>
+              <h5 class="list-group-item-text"></h5>
+              <h5 class="list-group-item-text"></h5>
             </a>
             {% endfor %}
         {% endif %}
@@ -70,6 +75,65 @@
       <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Add a Review
   </button>
 </div>
+
+<!-- Rating Modal -->
+<div class="modal fade" id="rateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Rate</h4>
+            </div>
+            <div class="modal-body">
+                    <form id="rate-form" role="form" action="/courses/rate/{{did}}/{{pid}}/{{cid}}" method="post">
+                        <div class="col-md-offset-3 column">
+                        <div class="form-group row">
+                            <h4>Rating</h4>
+                            <label class="radio-inline ">
+                              <input type="radio" name="stars" id="starRadio1" value="1" required> ☆
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="stars" id="starRadio2" value="2" required> ☆☆
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="stars" id="starRadio3" value="3" required> ☆☆☆
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="stars" id="starRadio4" value="4" required> ☆☆☆☆
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="stars" id="starRadio5" value="5" required> ☆☆☆☆☆
+                            </label>
+                        </div>
+                        <div class="form-group row">
+                            <h4>Workload</h4>
+                            <label class="radio-inline ">
+                              <input type="radio" name="workload" id="workRadio1" value="1" required> LOL
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="workload" id="workRadio2" value="2" required> Easy
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="workload" id="workRadio3" value="3" required> Average
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="workload" id="workRadio4" value="4" required> Hard
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="workload" id="workRadio5" value="5" required> Insane
+                            </label>
+                        </div>
+                    </div>
+                        <div class="modal-footer">
+                            <input class="btn btn-primary" value="Submit" type="submit">
+                            <!-- <button id="user-sign-up" type="button" class="btn btn-primary">Review</button> -->
+                        </div>
+                    </form>
+                </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Review Modal -->
 <div class="modal fade" id="revModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -92,7 +156,6 @@
                     </div>
                     <div class="modal-footer">
                         <input class="btn btn-primary" value="Submit" type="submit">
-                        <!-- <button id="user-sign-up" type="button" class="btn btn-primary">Review</button> -->
                     </div>
                 </form>
             </div>
