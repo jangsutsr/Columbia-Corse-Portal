@@ -8,7 +8,7 @@
   <a data-toggle="modal" href="#rateModal"><h5 class="text-center">Workload {{ workload }} 💪</h5></a>
   <p class="lead blog-description text-center"></p>
 </div>
-<!-- My Courses List -->
+<!-- Documents -->
 <div class="col-lg-5 col-lg-offset-1">
    <div class="panel panel-primary">
       <div class="panel-heading">
@@ -40,7 +40,7 @@
       <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span> Add a Document
   </button>
 </div>
-
+<!-- Reviews -->
 <div class="col-lg-5">
     <div class="panel panel-primary">
       <div class="panel-heading">
@@ -55,7 +55,7 @@
               <p class="list-group-item-text">{{ review[4] }}</p>
               <!-- user -->
               <h5 class="list-group-item-text">{{ review[1] }} on {{ review[5] }}</h5>
-              <h5 class="list-group-item-text"></h5>
+              <a id="rateareview" data-toggle="modal" href="#rateRevModal" data-rid="{{ review[0] }}" data-target="#rateRevModal"><h6 class="text-center">Review Rating {{ review[7] }} ☆</h6></a>
               <h5 class="list-group-item-text"></h5>
             </a>
             {% endfor %}
@@ -76,7 +76,7 @@
   </button>
 </div>
 
-<!-- Rating Modal -->
+<!-- Course Rating Modal -->
 <div class="modal fade" id="rateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -126,7 +126,6 @@
                     </div>
                         <div class="modal-footer">
                             <input class="btn btn-primary" value="Submit" type="submit">
-                            <!-- <button id="user-sign-up" type="button" class="btn btn-primary">Review</button> -->
                         </div>
                     </form>
                 </div>
@@ -134,6 +133,44 @@
     </div>
 </div>
 
+<!-- Review Rating Modal -->
+<div class="modal fade" id="rateRevModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Rate Review</h4>
+            </div>
+            <div class="modal-body">
+                    <form id="rate-review" role="form" action="/review/rate/{{did}}/{{pid}}/{{cid}}" method="post">
+                        <div class="col-md-offset-3 column">
+                        <div class="form-group row">
+                            <h4>Rating</h4>
+                            <label class="radio-inline ">
+                              <input type="radio" name="stars" id="starRadio1" value="1" required> ☆
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="stars" id="starRadio2" value="2" required> ☆☆
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="stars" id="starRadio3" value="3" required> ☆☆☆
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="stars" id="starRadio4" value="4" required> ☆☆☆☆
+                            </label>
+                            <label class="radio-inline">
+                              <input type="radio" name="stars" id="starRadio5" value="5" required> ☆☆☆☆☆
+                            </label>
+                        </div>
+                    </div>
+                        <div class="modal-footer">
+                            <input class="btn btn-primary" value="Submit" type="submit">
+                        </div>
+                    </form>
+                </div>
+        </div>
+    </div>
+</div>
 
 <!-- Review Modal -->
 <div class="modal fade" id="revModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -163,5 +200,7 @@
         </div>
     </div>
 </div>
+
+<script src={{ url_for('static', filename='scripts/review.js') }}></script>
 
 {% endblock %}
