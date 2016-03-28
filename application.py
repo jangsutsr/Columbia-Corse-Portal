@@ -81,12 +81,15 @@ def delete_course(pid, cid):
 @application.route('/add/<pid>/<cid>')
 def add_course(pid, cid):
     if 'email' in session:
-        conn = getattr(g, 'conn', None)
-        conn.execute('''
-                     INSERT INTO subscribes (usr, course, course_prof)
-                     VALUES ('{}', '{}', '{}');
-                     '''.format(session['email'], int(cid), int(pid)))
-        return redirect(url_for('index'))
+        try:
+            conn = getattr(g, 'conn', None)
+            conn.execute('''
+                         INSERT INTO subscribes (usr, course, course_prof)
+                         VALUES ('{}', '{}', '{}');
+                         '''.format(session['email'], int(cid), int(pid)))
+            return redirect(url_for('index'))
+        except: # course already in user's subscribed list
+            return redirect(url_for('index'))
     else:
         return redirect(url_for('login'))
 
