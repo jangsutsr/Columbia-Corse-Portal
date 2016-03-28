@@ -38,13 +38,13 @@ def index():
     '''
     if 'email' in session:
         conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT a.dept, c.prof, c.cid, c.name
-                              FROM course AS c
-                              JOIN affiliate AS a ON a.prof=c.prof
-                              JOIN subscribes AS s ON c.cid=s.course AND c.prof=s.course_prof
-                              WHERE s.usr = '{}';
-                              '''.format(session['email']))
+        cursor = conn.execute("\
+                              SELECT a.dept, c.prof, c.cid, c.name \
+                              FROM course AS c \
+                              JOIN affiliate AS a ON a.prof=c.prof \
+                              JOIN subscribes AS s ON c.cid=s.course AND c.prof=s.course_prof \
+                              WHERE s.usr = %s; \
+                              ", session['email'])
         # put user subscribed courses into a row
         url = []; name = []; to_delete = []
         for row in cursor:
@@ -52,11 +52,11 @@ def index():
             if course_id not in to_delete:
                 url.append('/courses/'+'/'.join(map(str, row[:3]))); name.append(row[3])
                 to_delete.append(course_id)
-        all_courses = conn.execute('''
-                                   SELECT p.name, c.name, c.prof, c.cid
-                                   FROM course AS c, professor AS p
-                                   WHERE c.prof = p.id;
-                                   ''')
+        all_courses = conn.execute("\
+                                   SELECT p.name, c.name, c.prof, c.cid \
+                                   FROM course AS c, professor AS p \
+                                   WHERE c.prof = p.id; \
+                                   ")
         all_courses_lst = []
         for row in all_courses:
             all_courses_lst.append(row)
@@ -70,10 +70,10 @@ def index():
 def delete_course(pid, cid):
     if 'email' in session:
         conn = getattr(g, 'conn', None)
-        conn.execute('''
-                     DELETE FROM subscribes AS s
-                     WHERE s.course={} AND s.course_prof={};
-                     '''.format(str(cid), str(pid)))
+        conn.execute("\
+                     DELETE FROM subscribes AS s \
+                     WHERE s.course=%s AND s.course_prof=%s; \
+                     ", str(cid), str(pid))
         return redirect(url_for('index'))
     else:
         return redirect(url_for('login'))
@@ -83,10 +83,10 @@ def add_course(pid, cid):
     if 'email' in session:
         try:
             conn = getattr(g, 'conn', None)
-            conn.execute('''
-                         INSERT INTO subscribes (usr, course, course_prof)
-                         VALUES ('{}', '{}', '{}');
-                         '''.format(session['email'], int(cid), int(pid)))
+            conn.execute("\
+                         INSERT INTO subscribes (usr, course, course_prof) \
+                         VALUES (%s, %s, %s); \
+                         ", session['email'], int(cid), int(pid))
             return redirect(url_for('index'))
         except: # course already in user's subscribed list
             return redirect(url_for('index'))
@@ -97,11 +97,11 @@ def add_course(pid, cid):
 def nav_dept():
     if 'email' in session:
         conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT *
-                              FROM department AS d
-                              ORDER BY name;
-                              ''')
+        cursor = conn.execute("\
+                              SELECT * \
+                              FROM department AS d \
+                              ORDER BY name; \
+                              ")
         urls = []; names = []
         for row in cursor:
             urls.append('/courses/'+str(row[0])); names.append(row[1])
@@ -113,13 +113,13 @@ def nav_dept():
 def nav_prof(did):
     if 'email' in session:
         conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT p.id, p.name
-                              FROM professor AS p
-                              JOIN affiliate AS a ON p.id=a.prof
-                              JOIN department AS d on d.id=a.dept
-                              WHERE d.id={};
-                              '''.format(int(did)))
+        cursor = conn.execute("\
+                              SELECT p.id, p.name \
+                              FROM professor AS p \
+                              JOIN affiliate AS a ON p.id=a.prof \
+                              JOIN department AS d on d.id=a.dept \
+                              WHERE d.id=%s; \
+                              ", int(did))
         urls = []; names = []
         for row in cursor:
             urls.append('/courses/'+did+'/'+str(row[0])); names.append(row[1])
@@ -131,11 +131,11 @@ def nav_prof(did):
 def nav_course(did, pid):
     if 'email' in session:
         conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT c.cid, c.name
-                              FROM course AS c
-                              WHERE c.prof={};
-                              '''.format(int(pid)))
+        cursor = conn.execute("\
+                              SELECT c.cid, c.name \
+                              FROM course AS c \
+                              WHERE c.prof=%s; \
+                              ", int(pid))
         urls = []; names = []
         for row in cursor:
             urls.append('/courses/'+did+'/'+pid+'/'+str(row[0])); names.append(row[1])
@@ -151,23 +151,24 @@ def course_info(did, pid, cid):
     if 'email' in session:
         if request.method == 'GET':
             conn = getattr(g, 'conn', None)
-            cursor = conn.execute('''
-                                  SELECT *
-                                  FROM course AS c
-                                  JOIN professor AS p ON c.prof = p.id
-                                  WHERE c.prof={} AND c.cid={};
-                                  '''.format(int(pid), int(cid)))
+            cursor = conn.execute("\
+                                  SELECT * \
+                                  FROM course AS c \
+                                  JOIN professor AS p ON c.prof = p.id \
+                                  WHERE c.prof=%s AND c.cid=%s; \
+                                  ", int(pid), int(cid))
             for row in cursor:
                 course_name = row[2]
                 prof_name = row[7]
                 workload = row[3]
                 rating = row[4]
-            reviews = conn.execute('''
-                                  SELECT *
-                                  FROM review AS r
-                                  WHERE r.prof={} AND r.cid={};
-                                  '''.format(int(pid), int(cid)))
+            reviews = conn.execute("\
+                                  SELECT * \
+                                  FROM review AS r \
+                                  WHERE r.prof=%s AND r.cid=%s; \
+                                  ", int(pid), int(cid))
             reviews = list(reviews)
+            print reviews
             return render_template('course.html', user=session['email'],
                                     course_name=course_name, prof_name=prof_name,
                                     reviews=reviews, did=did, pid=pid, cid=cid,
@@ -177,14 +178,14 @@ def course_info(did, pid, cid):
             now.strftime("%Y-%m-%d")
             conn = getattr(g, 'conn', None)
             # Insert data for review
-            cursor = conn.execute('''
-                                  INSERT INTO course_subscribes_usr (usr, cid, prof)
-                                  VALUES ('{}', '{}', '{}');
-                                  '''.format(session['email'], int(cid), int(pid)))
-            cursor = conn.execute('''
-                                  INSERT INTO review (usr, cid, prof, content, create_date)
-                                  VALUES ('{}', '{}', '{}', $${}$$, '{}');
-                                  '''.format(session['email'], int(cid), int(pid), request.form['comment'], now))
+            cursor = conn.execute("\
+                                  INSERT INTO course_subscribes_usr (usr, cid, prof) \
+                                  VALUES (%s, %s, %s); \
+                                  ", session['email'], int(cid), int(pid))
+            cursor = conn.execute("\
+                                  INSERT INTO review (usr, cid, prof, content, create_date) \
+                                  VALUES (%s, %s, %s, %s, %s); \
+                                  ", session['email'], int(cid), int(pid), request.form['comment'], now)
             return redirect('/courses/' + did + '/' + pid + '/' + cid)
     else:
         return redirect(url_for('login'))
@@ -197,25 +198,25 @@ def rate_course(did, pid, cid):
         if request.method == 'POST':
             conn = getattr(g, 'conn', None)
             # first get current rating, workload, and vote count
-            course = conn.execute('''
-                                  SELECT c.name, c.workload, c.star, c.vote_count
-                                  FROM course AS c
-                                  WHERE c.prof={} AND c.cid={};
-                                  '''.format(int(pid), int(cid)))
+            course = conn.execute("\
+                                  SELECT c.name, c.workload, c.star, c.vote_count \
+                                  FROM course AS c \
+                                  WHERE c.prof=%s AND c.cid=%s; \
+                                  ", int(pid), int(cid))
             for row in course:
                 votes = row
             course_name = votes[0]
             # the first vote!
             if votes[3] == None:
-                cursor = conn.execute('''
-                                      UPDATE course AS c
-                                      SET workload = '{}',
-                                      star = '{}',
-                                      vote_count = '{}'
-                                      WHERE prof = '{}' AND cid = '{}';
-                                      '''.format(float(request.form['workload']),
-                                                 float(request.form['stars']), 1,
-                                                 int(pid), int(cid)))
+                cursor = conn.execute("\
+                                      UPDATE course AS c \
+                                      SET workload = %s, \
+                                      star = %s, \
+                                      vote_count = %s \
+                                      WHERE prof = %s AND cid = %s; \
+                                      ", float(request.form['workload']),
+                                         float(request.form['stars']), 1,
+                                         int(pid), int(cid))
                 return redirect('/courses/' + did + '/' + pid + '/' + cid)
             # not the first vote, so take this vote with weighted moving average
             else:
@@ -231,87 +232,75 @@ def rate_course(did, pid, cid):
                 new_stars = (((curr_stars * curr_votes) + float(request.form['stars'])) / (curr_votes + 1))
                 print new_stars
                 # insert values and iterate vote count
-                cursor = conn.execute('''
-                                      UPDATE course AS c
-                                      SET workload = '{}',
-                                      star = '{}',
-                                      vote_count = '{}'
-                                      WHERE prof = '{}' AND cid = '{}';
-                                      '''.format(new_workload, new_stars,
-                                                 curr_votes + 1,
-                                                 int(pid), int(cid)))
+                cursor = conn.execute("\
+                                      UPDATE course AS c \
+                                      SET workload = %s, \
+                                      star = %s, \
+                                      vote_count = %s \
+                                      WHERE prof = %s AND cid = %s; \
+                                      ", new_workload, new_stars,
+                                         curr_votes + 1,
+                                         int(pid), int(cid))
             return redirect('/courses/' + did + '/' + pid + '/' + cid)
         else:
             return redirect('/courses/' + did + '/' + pid + '/' + cid)
     else:
         return redirect(url_for('login'))
 
-# @application.route('/review/rate/<pid>/<cid>/<usr>', methods=['POST', 'GET'])
-# def rate_review(pid, cid, usr):
-#     ''' Function to rate a particular review for a course.
-#     '''
-#     if 'email' in session:
-#         if request.method == 'POST':
-#             conn = getattr(g, 'conn', None)
-#             # first get current rating, workload, and vote count
-#             course = conn.execute('''
-#                                   SELECT r.vote_count
-#                                   FROM review AS r
-#                                   WHERE c.prof={} AND c.cid={};
-#                                   '''.format(int(pid), int(cid)))
-#             for row in course:
-#                 votes = row
-#             course_name = votes[0]
-#             # the first vote!
-#             if votes[3] == None:
-#                 cursor = conn.execute('''
-#                                       UPDATE course AS c
-#                                       SET workload = '{}',
-#                                       star = '{}',
-#                                       vote_count = '{}'
-#                                       WHERE prof = '{}' AND cid = '{}';
-#                                       '''.format(float(request.form['workload']),
-#                                                  float(request.form['stars']), 1,
-#                                                  int(pid), int(cid)))
-#                 return redirect('/courses/' + did + '/' + pid + '/' + cid)
-#             # not the first vote, so take this vote with weighted moving average
-#             else:
-#                 curr_stars = float(votes[1])
-#                 curr_workload = float(votes[2])
-#                 curr_votes = votes[3]
-#                 # new weighted moving average of workload
-#                 print (curr_workload * curr_votes) + float(request.form['workload'])
-#                 print (curr_votes + 1)
-#                 new_workload = (((curr_workload * curr_votes) + float(request.form['workload'])) / (curr_votes + 1))
-#                 print new_workload
-#                 # new weighted moving average of stars
-#                 new_stars = (((curr_stars * curr_votes) + float(request.form['stars'])) / (curr_votes + 1))
-#                 print new_stars
-#                 # insert values and iterate vote count
-#                 cursor = conn.execute('''
-#                                       UPDATE course AS c
-#                                       SET workload = '{}',
-#                                       star = '{}',
-#                                       vote_count = '{}'
-#                                       WHERE prof = '{}' AND cid = '{}';
-#                                       '''.format(new_workload, new_stars,
-#                                                  curr_votes + 1,
-#                                                  int(pid), int(cid)))
-#             return redirect('/courses/' + did + '/' + pid + '/' + cid)
-#         else:
-#             return redirect('/courses/' + did + '/' + pid + '/' + cid)
-#     else:
-#         return redirect(url_for('login'))
+@application.route('/review/rate/<did>/<pid>/<cid>/<rid>', methods=['POST', 'GET'])
+def rate_review(did, pid, cid, rid):
+    ''' Function to rate a particular review for a course.
+    '''
+    if 'email' in session:
+        if request.method == 'POST':
+            conn = getattr(g, 'conn', None)
+            # first get current review rating and vote count
+            reviews = conn.execute("\
+                                  SELECT r.star, r.vote_count \
+                                  FROM review AS r \
+                                  WHERE r.rid=%s; \
+                                  ", int(rid))
+            for row in reviews:
+                review = row
+            # the first vote!
+            if review[1] == None:
+                cursor = conn.execute("\
+                                      UPDATE review \
+                                      SET star = %s, \
+                                      vote_count = %s \
+                                      WHERE rid = %s; \
+                                      ", float(request.form['stars']),
+                                         1, int(rid))
+                return redirect('/courses/' + did + '/' + pid + '/' + cid)
+            # not the first vote, so take this vote with weighted moving average
+            else:
+                curr_stars = float(review[0])
+                curr_votes = review[1]
+                # new weighted moving average of stars
+                new_stars = (((curr_stars * curr_votes) + float(request.form['stars'])) / (curr_votes + 1))
+                # insert values and iterate vote count
+                cursor = conn.execute("\
+                                      UPDATE review \
+                                      SET star = %s, \
+                                      vote_count = %s \
+                                      WHERE rid = %s; \
+                                      ", new_stars, curr_votes + 1,
+                                         int(rid))
+            return redirect('/courses/' + did + '/' + pid + '/' + cid)
+        else:
+            return redirect('/courses/' + did + '/' + pid + '/' + cid)
+    else:
+        return redirect(url_for('login'))
 
 @application.route('/documents/<prof>/<cid>')
 def documents(prof, cid):
     if 'email' in session:
         conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT *
-                              FROM document AS d
-                              WHERE d.prof={} AND d.cid={};
-                              '''.format(int(prof), int(cid)))
+        cursor = conn.execute("\
+                              SELECT * \
+                              FROM document AS d \
+                              WHERE d.prof=%s AND d.cid=%s; \
+                              ", int(prof), int(cid))
         for row in cursor:
             print(row.items())
         return render_template('documents.html', user=session['email'])
@@ -327,11 +316,11 @@ def profile():
         else:
             return redirect(url_for('login'))
     else:
-        cursor = conn.execute('''
-                              SELECT u.passwd
-                              FROM usr AS u
-                              WHERE u.e_mail='{}';
-                              '''.format(request.form['email']))
+        cursor = conn.execute("\
+                              SELECT u.passwd \
+                              FROM usr AS u \
+                              WHERE u.e_mail=%s; \
+                              ", request.form['email'])
         for row in cursor:
             if row['passwd'] == request.form['passwd_origin']: break
         else:
@@ -339,21 +328,21 @@ def profile():
         if request.form['passwd_change'] != request.form['passwd_validate']:
             return render_template('profile.html', email = session['email'], is_valid='no', user=session['email'])
         else:
-            conn.execute('''
-                         UPDATE usr
-                         SET passwd='{}'
-                         WHERE e_mail='{}';
-                         '''.format(request.form['passwd_change'], request.form['email']))
+            conn.execute("\
+                         UPDATE usr \
+                         SET passwd=%s \
+                         WHERE e_mail=%s \
+                         ", request.form['passwd_change'], request.form['email'])
             return render_template('profile.html', email=session['email'], is_valid='yes', user=session['email'])
 
 @application.route('/register', methods=['POST'])
 def register():
     conn = getattr(g, 'conn', None)
     try:
-        conn.execute('''
-                     INSERT INTO usr (name, passwd, e_mail)
-                     VALUES ('{}', '{}', '{}');
-                     '''.format(request.form['name'], request.form['passwd'], request.form['email']))
+        conn.execute("\
+                     INSERT INTO usr (name, passwd, e_mail) \
+                     VALUES (%s, %s, %s); \
+                     ", request.form['name'], request.form['passwd'], request.form['email'])
         session['email'] = request.form['email']
         return redirect(url_for('index'))
     except Exception:
@@ -363,11 +352,11 @@ def register():
 def login():
     if request.method == 'POST':
         conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT *
-                              FROM usr
-                              WHERE e_mail='{}' AND passwd='{}';
-                              '''.format(request.form['email'], request.form['passwd']))
+        cursor = conn.execute("\
+                              SELECT * \
+                              FROM usr \
+                              WHERE e_mail=%s AND passwd=%s; \
+                              ", request.form['email'], request.form['passwd'])
         for row in cursor:
             print row['e_mail']
             session['email'] = row['e_mail']
