@@ -56,6 +56,7 @@
               <!-- user -->
               <h5 class="list-group-item-text">{{ review[1] }} on {{ review[5] }}</h5>
               <a id="rateareview" data-toggle="modal" href="#rateRevModal" data-rid="{{ review[0] }}" data-target="#rateRevModal"><h6 class="text-center">Review Rating {{ review[7] }} ☆</h6></a>
+              <a id="reportareview" href="/report/review/{{did}}/{{pid}}/{{cid}}/{{review[0]}}"><h6 class="text-center">Report</h6></a>
               <h5 class="list-group-item-text"></h5>
             </a>
             {% endfor %}

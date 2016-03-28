@@ -247,6 +247,45 @@ def rate_course(did, pid, cid):
     else:
         return redirect(url_for('login'))
 
+@application.route('/report/review/<did>/<pid>/<cid>/<rid>', methods=['GET'])
+def report_review(did, pid, cid, rid):
+    ''' Function to report a review for a course.
+    '''
+    if 'email' in session:
+        if request.method == 'GET':
+            conn = getattr(g, 'conn', None)
+            # first get current review rating and vote count
+            reviews = conn.execute("\
+                                  SELECT r.report_count \
+                                  FROM review AS r \
+                                  WHERE r.rid=%s; \
+                                  ", int(rid))
+            for row in reviews:
+                review = row
+                print "here"
+                print review
+            # the first report!
+            if review[0] == None:
+                cursor = conn.execute("\
+                                      UPDATE review \
+                                      SET report_count = %s \
+                                      WHERE rid = %s; \
+                                      ", 1, int(rid))
+                return redirect('/courses/' + did + '/' + pid + '/' + cid)
+            # not the report
+            else:
+                print "here2"
+                cursor = conn.execute("\
+                                      UPDATE review \
+                                      SET report_count = %s \
+                                      WHERE rid = %s; \
+                                      ", int(review[0]) + 1, int(rid))
+            return redirect('/courses/' + did + '/' + pid + '/' + cid)
+        else:
+            return redirect('/courses/' + did + '/' + pid + '/' + cid)
+    else:
+        return redirect(url_for('login'))
+
 @application.route('/review/rate/<did>/<pid>/<cid>/<rid>', methods=['POST', 'GET'])
 def rate_review(did, pid, cid, rid):
     ''' Function to rate a particular review for a course.
