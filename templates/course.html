@@ -11,11 +11,26 @@
       <div class="panel-heading">
         <h3 class="panel-title">Documents</h3>
       </div>
-      <div class="list-group">
-        <a href="#" class="list-group-item">
-          <p class="list-group-item-text">...</p>
-          <h4 class="list-group-item-heading">User</h4>
-        </a>
+        <div class="list-group">
+        {% if documents|length > 0 %}
+            {% for document in documents %}
+            <a href="#" class="list-group-item">
+              <!-- review content -->
+              <p class="list-group-item-text">{{ document[4] }}</p>
+              <!-- user -->
+              <h5 class="list-group-item-text">{{ document[1] }}</h5>
+            </a>
+            {% endfor %}
+        {% endif %}
+        <!-- No reviews to output -->
+        {% if documents|length == 0 %}
+            <a href="#" class="list-group-item">
+              <!-- review content -->
+              <p class="list-group-item-text">No Reviews!</p>
+              <!-- user -->
+              <h5 class="list-group-item-text"></h5>
+            </a>
+        {% endif %}
       </div>
     </div>
   <button type="button" class="btn btn-warning btn-lg btn-block" data-toggle="modal" data-target="#regModal">
@@ -65,21 +80,23 @@
                 <h4 class="modal-title" id="myModalLabel">Review</h4>
             </div>
             <div class="modal-body">
-                <form id="user-register-form" role="form">
+                <form id="review-form" role="form" method="post">
                     <div class="form-group row">
-                        <label class="control-label col-sm-1" for="uni">
+                        <label class="control-label col-sm-1" for="review">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </label>
                         <div class="col-sm-11">
                             <label for="comment">{{ course_name }}</label>
-                            <textarea class="form-control" rows="5" id="comment"></textarea>
+                            <textarea class="form-control" rows="5" name="comment"></textarea>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input class="btn btn-primary" value="Submit" type="submit">
+                        <!-- <button id="user-sign-up" type="button" class="btn btn-primary">Review</button> -->
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button id="user-sign-up" type="button" class="btn btn-primary">Review</button>
-            </div>
+
         </div>
     </div>
 </div>

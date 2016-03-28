@@ -1,6 +1,6 @@
 from flask import Flask, request, session, g
 from flask import render_template, redirect, make_response, url_for
-import json
+import json, datetime
 import psycopg2
 from sqlalchemy import create_engine
 
@@ -52,7 +52,17 @@ def index():
             if course_id not in to_delete:
                 url.append('/courses/'+'/'.join(map(str, row[:3]))); name.append(row[3])
                 to_delete.append(course_id)
-        return render_template('index.html', url=url, name=name, user=session['email'], to_delete=to_delete)
+        all_courses = conn.execute('''
+                                   SELECT p.name, c.name, c.prof, c.cid
+                                   FROM course AS c, professor AS p
+                                   WHERE c.prof = p.id;
+                                   ''')
+        all_courses_lst = []
+        for row in all_courses:
+            all_courses_lst.append(row)
+        return render_template('index.html', url=url, name=name,
+                               user=session['email'], to_delete=to_delete,
+                               all_courses_lst=all_courses_lst)
     else:
         return redirect(url_for('login'))
 
@@ -64,6 +74,18 @@ def delete_course(pid, cid):
                      DELETE FROM subscribes AS s
                      WHERE s.course={} AND s.course_prof={};
                      '''.format(str(cid), str(pid)))
+        return redirect(url_for('index'))
+    else:
+        return redirect(url_for('login'))
+
+@application.route('/add/<pid>/<cid>')
+def add_course(pid, cid):
+    if 'email' in session:
+        conn = getattr(g, 'conn', None)
+        conn.execute('''
+                     INSERT INTO subscribes (usr, course, course_prof)
+                     VALUES ('{}', '{}', '{}');
+                     '''.format(session['email'], int(cid), int(pid)))
         return redirect(url_for('index'))
     else:
         return redirect(url_for('login'))
@@ -118,42 +140,47 @@ def nav_course(did, pid):
     else:
         return redirect(url_for('login'))
 
-@application.route('/courses/<did>/<pid>/<cid>')
+@application.route('/courses/<did>/<pid>/<cid>', methods=['POST', 'GET'])
 def course_info(did, pid, cid):
     ''' View function for a particular course.
     This view is supposed to give a general information of a course.
     '''
     if 'email' in session:
-        conn = getattr(g, 'conn', None)
-        cursor = conn.execute('''
-                              SELECT *
-                              FROM course AS c
-                              JOIN professor AS p ON c.prof = p.id
-                              WHERE c.prof={} AND c.cid={};
-                              '''.format(int(pid), int(cid)))
-        for row in cursor:
-            course_name = row[2]
-            prof_name = row[7]
-        reviews = conn.execute('''
-                              SELECT *
-                              FROM review AS r
-                              WHERE r.prof={} AND r.cid={};
-                              '''.format(int(pid), int(cid)))
-        reviews = list(reviews)
-        return render_template('course.html', user=session['email'],
-                                course_name=course_name, prof_name=prof_name,
-                                reviews=reviews)
-    else:
-        return redirect(url_for('login'))
-
-@application.route('/review/<rid>/<usr>/<cid>/<prof>', methods=['GET', 'POST'])
-def reviews(prof, cid):
-    if 'email' in session:
-        conn = getattr(g, 'conn', None)
         if request.method == 'GET':
-            pass
-        else:
-            pass
+            conn = getattr(g, 'conn', None)
+            cursor = conn.execute('''
+                                  SELECT *
+                                  FROM course AS c
+                                  JOIN professor AS p ON c.prof = p.id
+                                  WHERE c.prof={} AND c.cid={};
+                                  '''.format(int(pid), int(cid)))
+            for row in cursor:
+                course_name = row[2]
+                prof_name = row[7]
+            reviews = conn.execute('''
+                                  SELECT *
+                                  FROM review AS r
+                                  WHERE r.prof={} AND r.cid={};
+                                  '''.format(int(pid), int(cid)))
+            reviews = list(reviews)
+            return render_template('course.html', user=session['email'],
+                                    course_name=course_name, prof_name=prof_name,
+                                    reviews=reviews, did=did, pid=pid, cid=cid)
+        elif request.method == 'POST':
+            print request.form['comment']
+            now = datetime.datetime.now()
+            now.strftime("%Y-%m-%d")
+            conn = getattr(g, 'conn', None)
+            # Insert data for review
+            cursor = conn.execute('''
+                                  INSERT INTO course_subscribes_usr (usr, cid, prof)
+                                  VALUES ('{}', '{}', '{}');
+                                  '''.format(session['email'], int(cid), int(pid)))
+            cursor = conn.execute('''
+                                  INSERT INTO review (usr, cid, prof, content, create_date)
+                                  VALUES ('{}', '{}', '{}', '{}', '{}');
+                                  '''.format(session['email'], int(cid), int(pid), request.form['comment'], now))
+            return redirect('/courses/' + did + '/' + pid + '/' + cid)
     else:
         return redirect(url_for('login'))
 
