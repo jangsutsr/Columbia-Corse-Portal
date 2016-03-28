@@ -183,7 +183,7 @@ def course_info(did, pid, cid):
                                   '''.format(session['email'], int(cid), int(pid)))
             cursor = conn.execute('''
                                   INSERT INTO review (usr, cid, prof, content, create_date)
-                                  VALUES ('{}', '{}', '{}', '{}', '{}');
+                                  VALUES ('{}', '{}', '{}', $${}$$, '{}');
                                   '''.format(session['email'], int(cid), int(pid), request.form['comment'], now))
             return redirect('/courses/' + did + '/' + pid + '/' + cid)
     else:
@@ -245,6 +245,63 @@ def rate_course(did, pid, cid):
             return redirect('/courses/' + did + '/' + pid + '/' + cid)
     else:
         return redirect(url_for('login'))
+
+# @application.route('/review/rate/<pid>/<cid>/<usr>', methods=['POST', 'GET'])
+# def rate_review(pid, cid, usr):
+#     ''' Function to rate a particular review for a course.
+#     '''
+#     if 'email' in session:
+#         if request.method == 'POST':
+#             conn = getattr(g, 'conn', None)
+#             # first get current rating, workload, and vote count
+#             course = conn.execute('''
+#                                   SELECT r.vote_count
+#                                   FROM review AS r
+#                                   WHERE c.prof={} AND c.cid={};
+#                                   '''.format(int(pid), int(cid)))
+#             for row in course:
+#                 votes = row
+#             course_name = votes[0]
+#             # the first vote!
+#             if votes[3] == None:
+#                 cursor = conn.execute('''
+#                                       UPDATE course AS c
+#                                       SET workload = '{}',
+#                                       star = '{}',
+#                                       vote_count = '{}'
+#                                       WHERE prof = '{}' AND cid = '{}';
+#                                       '''.format(float(request.form['workload']),
+#                                                  float(request.form['stars']), 1,
+#                                                  int(pid), int(cid)))
+#                 return redirect('/courses/' + did + '/' + pid + '/' + cid)
+#             # not the first vote, so take this vote with weighted moving average
+#             else:
+#                 curr_stars = float(votes[1])
+#                 curr_workload = float(votes[2])
+#                 curr_votes = votes[3]
+#                 # new weighted moving average of workload
+#                 print (curr_workload * curr_votes) + float(request.form['workload'])
+#                 print (curr_votes + 1)
+#                 new_workload = (((curr_workload * curr_votes) + float(request.form['workload'])) / (curr_votes + 1))
+#                 print new_workload
+#                 # new weighted moving average of stars
+#                 new_stars = (((curr_stars * curr_votes) + float(request.form['stars'])) / (curr_votes + 1))
+#                 print new_stars
+#                 # insert values and iterate vote count
+#                 cursor = conn.execute('''
+#                                       UPDATE course AS c
+#                                       SET workload = '{}',
+#                                       star = '{}',
+#                                       vote_count = '{}'
+#                                       WHERE prof = '{}' AND cid = '{}';
+#                                       '''.format(new_workload, new_stars,
+#                                                  curr_votes + 1,
+#                                                  int(pid), int(cid)))
+#             return redirect('/courses/' + did + '/' + pid + '/' + cid)
+#         else:
+#             return redirect('/courses/' + did + '/' + pid + '/' + cid)
+#     else:
+#         return redirect(url_for('login'))
 
 @application.route('/documents/<prof>/<cid>')
 def documents(prof, cid):
