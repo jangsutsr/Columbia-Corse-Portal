@@ -181,6 +181,7 @@ def course_info(did, pid, cid):
                                     FROM document AS d \
                                     WHERE d.prof=%s AND d.cid=%s; \
                                     ", int(pid), int(cid)))
+        print documents
         return render_template('course.html', user=session['email'],
                                 course_name=course_name,
                                 prof_name=prof_name,

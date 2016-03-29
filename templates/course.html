@@ -21,10 +21,10 @@
               <!-- review content -->
               <p class="list-group-item-text">{{ document[4] }}</p>
               <h5 class="list-group-item-text">{{ document[1] }} on {{ document[6] }}</h5>
-              <a id="rateadocument" data-toggle="modal" href="#rateDocModal" data-did="{{ documents[0][0] }}" data-target="#rateDocModal">
+              <a id="rateadocument_{{ document[0] }}" data-toggle="modal" href="#rateDocModal" data-did="{{ document[0] }}" data-target="#rateDocModal">
                 <h6 class="text-center">Document Rating {{ document[7] }} ☆</h6>
               </a>
-              <a id="reportadocument" href="/report/document/{{did}}/{{pid}}/{{cid}}/{{documents[0]}}">
+              <a id="reportadocument{{ document[0] }}" href="/report/document/{{did}}/{{pid}}/{{cid}}/{{document[0]}}">
                 <h6 class="text-center">Report {{ document[9] }}</h6>
               </a>
               <h5 class="list-group-item-text"></h5>
@@ -61,10 +61,10 @@
             <p class="list-group-item-text">{{ review[4] }}</p>
             <!-- user -->
             <h5 class="list-group-item-text">{{ review[1] }} on {{ review[5] }}</h5>
-            <a id="rateareview" data-toggle="modal" href="#rateRevModal" data-rid="{{ review[0] }}" data-target="#rateRevModal">
+            <a id="rateareview_{{ review[0] }}" data-toggle="modal" href="#rateRevModal" data-rid="{{ review[0] }}" data-target="#rateRevModal">
               <h6 class="text-center">Review Rating {{ review[7] }} ☆</h6>
             </a>
-            <a id="reportareview" href="/report/review/{{did}}/{{pid}}/{{cid}}/{{review[0]}}">
+            <a id="reportareview_{{ review[0] }}" href="/report/review/{{did}}/{{pid}}/{{cid}}/{{review[0]}}">
               <h6 class="text-center">Report {{ review[9] }}</h6>
             </a>
             <h5 class="list-group-item-text"></h5>
