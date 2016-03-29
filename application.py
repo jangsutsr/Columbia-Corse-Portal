@@ -451,7 +451,7 @@ def rate_doc(did, pid, cid, doc):
                                       vote_count = %s \
                                       WHERE did = %s; \
                                       ", new_stars, curr_votes + 1,
-                                         int(rid))
+                                         int(doc))
         return redirect('/courses/' + did + '/' + pid + '/' + cid)
     else:
         return redirect(url_for('login'))

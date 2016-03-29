@@ -21,10 +21,10 @@
               <!-- review content -->
               <p class="list-group-item-text">{{ document[4] }}</p>
               <h5 class="list-group-item-text">{{ document[1] }} on {{ document[6] }}</h5>
-              <a id="rateadocument" data-toggle="modal" href="#rateDocModal" data-did="{{ document[0] }}" data-target="#rateDocModal">
+              <a id="rateadocument" data-toggle="modal" href="#rateDocModal" data-did="{{ documents[0][0] }}" data-target="#rateDocModal">
                 <h6 class="text-center">Document Rating {{ document[7] }} ☆</h6>
               </a>
-              <a id="reportadocument" href="/report/document/{{did}}/{{pid}}/{{cid}}/{{document[0]}}">
+              <a id="reportadocument" href="/report/document/{{did}}/{{pid}}/{{cid}}/{{documents[0]}}">
                 <h6 class="text-center">Report {{ document[9] }}</h6>
               </a>
               <h5 class="list-group-item-text"></h5>
@@ -192,7 +192,7 @@
                 <h4 class="modal-title" id="myModalLabel">Rate Document</h4>
             </div>
             <div class="modal-body">
-                    <form id="rate-review" role="form" action="/document/rate/{{did}}/{{pid}}/{{cid}}" method="post">
+                    <form id="rate-document" role="form" action="/document/rate/{{did}}/{{pid}}/{{cid}}" method="post">
                         <div class="col-md-offset-3 column">
                         <div class="form-group row">
                             <h4>Rating</h4>
