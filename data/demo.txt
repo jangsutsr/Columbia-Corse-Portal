@@ -1,0 +1,15 @@
+/Users/walt/Applications/py-wide/bin/python httpserver.py 8000
+
+http://localhost:8000/index.html
+
+
+demo
+
+😟asasd
+
+#$#$
+
+sdas d1212
+
+675
+

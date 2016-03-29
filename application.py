@@ -231,8 +231,8 @@ def documents(did, pid, cid):
             cursor = conn.execute("\
                                   SELECT file_location \
                                   FROM document \
-                                  WHERE did=%s AND usr=%s AND cid=%s AND prof=%s; \
-                                  ", int(request.args['doc']), session['email'], int(cid), int(pid))
+                                  WHERE did=%s; \
+                                  ", int(request.args['doc']))
             for row in cursor:
                 return send_from_directory('data', row[0], as_attachment=True)
             return redirect('/'.join(['/courses', did, pid, cid]))

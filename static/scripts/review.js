@@ -7,7 +7,6 @@ $("[id^=rateareview]").on('click', function (event) {
   act = act.concat('/'+rid)
   // update the action with the correction URI
   $("#rate-review").attr('action', act)
-  alert($("#rate-review").attr('action'))
 })
 
 // JS to update form action for rating a particular review
@@ -19,5 +18,4 @@ $("[id^=rateadocument]").on('click', function (event) {
   act = act.concat('/'+rid)
   // update the action with the correction URI
   $("#rate-document").attr('action', act)
-  alert($("#rate-document").attr('action'))
 })
