@@ -238,7 +238,6 @@ def documents(did, pid, cid):
             to_upload = request.files['file']
             if to_upload:
                 filename = secure_filename(to_upload.filename)
-                to_upload.save(os.path.join('data', filename))
                 try:
                     conn.execute("\
                                  INSERT INTO document (usr, cid, prof, name, file_location, create_date) \
@@ -249,6 +248,7 @@ def documents(did, pid, cid):
                                 request.form['name'],
                                 filename,
                                 datetime.datetime.now().strftime("%Y-%m-%d"))
+                    to_upload.save(os.path.join('data', filename))
                 except Exception:
                     pass
             return redirect('/'.join(['/courses', did, pid, cid]))
