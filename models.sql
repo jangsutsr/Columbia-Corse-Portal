@@ -26,8 +26,8 @@ CREATE TABLE course (
     prof INTEGER NOT NULL,
     cid INTEGER NOT NULL,
     name TEXT,
-    workload REAL CHECK (workload < 5 AND workload >= 0),
-    star REAL CHECK (star < 5 AND star >= 0),
+    workload REAL CHECK (workload <= 5 AND workload >= 0),
+    star REAL CHECK (star <= 5 AND star >= 0),
     vote_count INTEGER,
     PRIMARY KEY (prof, cid),
     FOREIGN KEY (prof) REFERENCES professor (id)
