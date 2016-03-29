@@ -234,6 +234,7 @@ def documents(did, pid, cid):
                                   ", int(request.args['doc']), session['email'], int(cid), int(pid))
             for row in cursor:
                 return send_from_directory('data', row[0], as_attachment=True)
+            return redirect('/'.join(['/courses', did, pid, cid]))
         else:
             to_upload = request.files['file']
             if to_upload:
