@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<setting>
+	<element type='Text' value='$$$/Bridge/BatchRename/DefaultTemplatePrefix=Project_' enumerated='false' priority='normal'>
+	</element>
+	<element type='Date' format='YYYYMMDD' value='DateCreated' enumerated='true' priority='normal'>
+	</element>
+	<element type='Text' value='_' enumerated='false' priority='normal'>
+	</element>
+	<element type='SequenceNumber' format='FourDigits' value='1' enumerated='false' priority='normal'>
+	</element>
+	<element type='AutoExtension' value='' enumerated='false' priority='post'>
+	</element>
+</setting>

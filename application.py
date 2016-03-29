@@ -239,15 +239,18 @@ def documents(did, pid, cid):
             if to_upload:
                 filename = secure_filename(to_upload.filename)
                 to_upload.save(os.path.join('data', filename))
-                conn.execute("\
-                             INSERT INTO document (usr, cid, prof, name, file_location, create_date) \
-                             VALUES (%s, %s, %s, %s, %s, %s)",
-                            session['email'],
-                            int(cid),
-                            int(pid),
-                            request.form['name'],
-                            filename,
-                            datetime.datetime.now().strftime("%Y-%m-%d"))
+                try:
+                    conn.execute("\
+                                 INSERT INTO document (usr, cid, prof, name, file_location, create_date) \
+                                 VALUES (%s, %s, %s, %s, %s, %s)",
+                                session['email'],
+                                int(cid),
+                                int(pid),
+                                request.form['name'],
+                                filename,
+                                datetime.datetime.now().strftime("%Y-%m-%d"))
+                except Exception:
+                    pass
             return redirect('/'.join(['/courses', did, pid, cid]))
     else:
         return redirect(url_for('login'))
@@ -349,23 +352,20 @@ def rate_review(did, pid, cid, rid):
         return redirect(url_for('login'))
 
 
-@application.route('/report/review/<did>/<pid>/<cid>/<rid>', methods=['GET'])
+@application.route('/report/review/<did>/<pid>/<cid>/<rid>')
 def report_review(did, pid, cid, rid):
     ''' Function to report a review for a course.
     '''
     if 'email' in session:
-        if request.method == 'GET':
-            conn = getattr(g, 'conn', None)
-            # first get current review rating and vote count
-            reviews = conn.execute("\
-                                  SELECT r.report_count \
-                                  FROM review AS r \
-                                  WHERE r.rid=%s; \
-                                  ", int(rid))
-            for row in reviews:
-                review = row
-                print "here"
-                print review
+        conn = getattr(g, 'conn', None)
+        # first get current review rating and vote count
+        reviews = conn.execute("\
+                              SELECT r.report_count \
+                              FROM review AS r \
+                              WHERE r.rid=%s; \
+                              ", int(rid))
+        for row in reviews:
+            review = row
             # the first report!
             if review[0] == None:
                 cursor = conn.execute("\
@@ -373,18 +373,45 @@ def report_review(did, pid, cid, rid):
                                       SET report_count = %s \
                                       WHERE rid = %s; \
                                       ", 1, int(rid))
-                return redirect('/courses/' + did + '/' + pid + '/' + cid)
             # not the report
             else:
-                print "here2"
                 cursor = conn.execute("\
                                       UPDATE review \
                                       SET report_count = %s \
                                       WHERE rid = %s; \
                                       ", int(review[0]) + 1, int(rid))
-            return redirect('/courses/' + did + '/' + pid + '/' + cid)
-        else:
-            return redirect('/courses/' + did + '/' + pid + '/' + cid)
+        return redirect('/courses/' + did + '/' + pid + '/' + cid)
+    else:
+        return redirect(url_for('login'))
+
+@application.route('/report/document/<did>/<pid>/<cid>/<doc>')
+def report_document(did, pid, cid, doc):
+    ''' Function to report a review for a course.
+    '''
+    if 'email' in session:
+        conn = getattr(g, 'conn', None)
+        # first get current review rating and vote count
+        documents = conn.execute("\
+                                 SELECT d.report_count \
+                                 FROM document AS d \
+                                 WHERE d.did=%s; \
+                                 ", int(doc))
+        for row in documents:
+            document = row
+            # the first report!
+            if document[0] == None:
+                cursor = conn.execute("\
+                                      UPDATE document \
+                                      SET report_count = %s \
+                                      WHERE did = %s; \
+                                      ", 1, int(doc))
+            # not the report
+            else:
+                cursor = conn.execute("\
+                                      UPDATE document \
+                                      SET report_count = %s WHERE did = %s; ",
+                                      int(document[0]) + 1, int(doc))
+        return redirect('/courses/' + did + '/' + pid + '/' + cid)
     else:
         return redirect(url_for('login'))
 

@@ -24,6 +24,9 @@
               <a id="rateareview" data-toggle="modal" href="#rateDocModal" data-did="{{ document[0] }}" data-target="#rateDocModal">
                 <h6 class="text-center">Document Rating {{ document[7] }} ☆</h6>
               </a>
+              <a id="reportareview" href="/report/document/{{did}}/{{pid}}/{{cid}}/{{document[0]}}">
+                <h6 class="text-center">Report {{ document[9] }}</h6>
+              </a>
               <h5 class="list-group-item-text"></h5>
             </a>
             {% endfor %}
@@ -58,8 +61,12 @@
             <p class="list-group-item-text">{{ review[4] }}</p>
             <!-- user -->
             <h5 class="list-group-item-text">{{ review[1] }} on {{ review[5] }}</h5>
-            <a id="rateareview" data-toggle="modal" href="#rateRevModal" data-rid="{{ review[0] }}" data-target="#rateRevModal"><h6 class="text-center">Review Rating {{ review[7] }} ☆</h6></a>
-            <a id="reportareview" href="/report/review/{{did}}/{{pid}}/{{cid}}/{{review[0]}}"><h6 class="text-center">Report</h6></a>
+            <a id="rateadocument" data-toggle="modal" href="#rateRevModal" data-rid="{{ review[0] }}" data-target="#rateRevModal">
+              <h6 class="text-center">Review Rating {{ review[7] }} ☆</h6>
+            </a>
+            <a id="reportadocument" href="/report/review/{{did}}/{{pid}}/{{cid}}/{{review[0]}}">
+              <h6 class="text-center">Report {{ review[9] }}</h6>
+            </a>
             <h5 class="list-group-item-text"></h5>
           </a>
           {% endfor %}
@@ -146,7 +153,7 @@
                 <h4 class="modal-title" id="myModalLabel">Rate Review</h4>
             </div>
             <div class="modal-body">
-                  <form id="rate-review" role="form" action="/review/rate/{{did}}/{{pid}}/{{cid}}/{{rid}}" method="post">
+                  <form id="rate-review" role="form" action="/review/rate/{{did}}/{{pid}}/{{cid}}" method="post">
                         <div class="col-md-offset-3 column">
                         <div class="form-group row">
                             <h4>Rating</h4>
@@ -273,6 +280,6 @@
         </div>
     </div>
 </div>
-<script src={{ url_for('static', filename='scripts/review.js') }}></script>
+<script src="{{ url_for('static', filename='scripts/review.js') }}"></script>
 
 {% endblock %}

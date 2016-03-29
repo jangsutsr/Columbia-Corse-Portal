@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<setting>
+	<element type='StringSubstitution' value='OriginalFilename' enumerated='true' priority='normal' find='' ignoreCase='false' replaceAll='true' replaceWith='' useRegularExpression='false'>
+	</element>
+	<element type='AutoExtension' value='' enumerated='false' priority='post'>
+	</element>
+</setting>
