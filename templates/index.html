@@ -19,7 +19,7 @@
 		  <button type="button" class="list-group-item">
         <a href="{{ url[loop.index0] }}"><b>{{ item }}</b></a>
 	          <div class="pull-right action-buttons">
-              <a href="{{ to_delete[loop.index0] }}"><span class="glyphicon glyphicon-trash"></span></a>
+              <a href="{{ to_delete[loop.index0] }}/{{user}}"><span class="glyphicon glyphicon-trash"></span></a>
 	           </div>
 		  </button>
 		  {% endfor %}

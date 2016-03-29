@@ -68,18 +68,18 @@ def index():
     else:
         return redirect(url_for('login'))
 
-@application.route('/delete/<pid>/<cid>')
-def delete_course(pid, cid):
+@application.route('/delete/<pid>/<cid>/<usr>')
+def delete_course(pid, cid, usr):
     if 'email' in session:
         conn = getattr(g, 'conn', None)
         conn.execute("\
                      DELETE FROM subscribes AS s \
-                     WHERE s.course=%s AND s.course_prof=%s; \
-                     ", str(cid), str(pid))
+                     WHERE s.course=%s AND s.course_prof=%s AND s.usr=%s; \
+                     ", str(cid), str(pid), str(usr))
         conn.execute("\
                      DELETE FROM course_subscribes_usr AS s \
-                     WHERE s.cid=%s AND s.prof=%s; \
-                     ", str(cid), str(pid))
+                     WHERE s.cid=%s AND s.prof=%s AND s.usr=%s; \
+                     ", str(cid), str(pid), str(usr))
         return redirect(url_for('index'))
     else:
         return redirect(url_for('login'))
